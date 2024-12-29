@@ -3,12 +3,12 @@
         <q-header class="bg-primary text-white" elevated>
             <q-toolbar>
                 <q-toolbar-title>
-                    <q-avatar>
+                    <!--<q-avatar>
                         <img
                             src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg"
                         />
-                    </q-avatar>
-                    Title
+                    </q-avatar>-->
+                    OIDC Mock Provider
                 </q-toolbar-title>
             </q-toolbar>
         </q-header>
