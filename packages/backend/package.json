@@ -5,11 +5,14 @@
     "author": "Julian Cissen",
     "license": "MIT",
     "private": true,
-    "scripts": {},
+    "scripts": {
+        "dev": "tsx watch ./src/index.ts"
+    },
     "dependencies": {
         "express": "5.0.1"
     },
     "devDependencies": {
-        "@types/express": "^5.0.0"
+        "@types/express": "^5.0.0",
+        "tsx": "^4.19.2"
     }
 }
