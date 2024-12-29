@@ -1,0 +1,15 @@
+{
+    "name": "oidc-mock-backend",
+    "version": "0.1.0",
+    "productName": "oidc-mock",
+    "author": "Julian Cissen",
+    "license": "MIT",
+    "private": true,
+    "scripts": {},
+    "dependencies": {
+        "express": "5.0.1"
+    },
+    "devDependencies": {
+        "@types/express": "^5.0.0"
+    }
+}
