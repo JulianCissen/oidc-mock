@@ -10,10 +10,12 @@
     },
     "dependencies": {
         "express": "5.0.1",
+        "oidc-provider": "8.6.0",
         "zod": "3.24.1"
     },
     "devDependencies": {
         "@types/express": "^5.0.0",
+        "@types/oidc-provider": "^8.5.2",
         "tsx": "^4.19.2"
     }
 }

@@ -1,17 +1,20 @@
-import { authorizeController } from './controllers';
-import express from 'express';
-import { internalController } from './controllers/internal';
+import Provider from 'oidc-provider';
 
-const app = express();
-const port = 3000;
-
-app.use(express.json());
-app.use((req, _, next) => {
-    console.log(`Request: ${req.method} ${req.url}`);
-    next();
+const oidc = new Provider('http://localhost:3000', {
+    clients: [
+        {
+            client_id: '123',
+            client_secret: 'secret',
+            redirect_uris: ['http://localhost:8080/cb'],
+        },
+    ],
+    pkce: {
+        required: (_1, _2) => false,
+    },
 });
-app.use('/', authorizeController.getRoutes(), internalController.getRoutes());
 
-app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+oidc.listen(3000, () => {
+    console.log(
+        'oidc-provider listening on port 3000, check http://localhost:3000/.well-known/openid-configuration',
+    );
 });
