@@ -1,11 +1,10 @@
 import express, {
     type Request,
     type RequestHandler,
+    type Response,
     type Router,
 } from 'express';
 import type { z } from 'zod';
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
 
 export abstract class Controller {
     protected router: Router;
@@ -16,6 +15,7 @@ export abstract class Controller {
 
     protected createRoute<
         TParams extends z.ZodType | undefined,
+        TResult,
         TBody extends z.ZodType | undefined,
         TQuery extends z.ZodType | undefined,
     >(
@@ -26,52 +26,74 @@ export abstract class Controller {
             query?: TQuery;
             params?: TParams;
         },
-        handler: RequestHandler<
-            TParams extends z.ZodType ? z.infer<TParams> : unknown,
-            any,
-            TBody extends z.ZodType ? z.infer<TBody> : unknown,
-            TQuery extends z.ZodType ? z.infer<TQuery> : unknown
-        >,
+        handler: (
+            request: Request<
+                TParams extends z.ZodType ? z.infer<TParams> : unknown,
+                TResult,
+                TBody extends z.ZodType ? z.infer<TBody> : unknown,
+                TQuery extends z.ZodType ? z.infer<TQuery> : unknown
+            >,
+            response: Response<TResult>,
+            next: RequestHandler,
+        ) => Promise<TResult> | TResult,
     ) {
-        this.router[method](route, (req, res, next) => {
-            if (validators.params) {
-                const res = validators.params.parse(req.params);
-                if (res.success) {
-                    req.params = res.data;
-                } else {
-                    next(res.error);
+        this.router[method](
+            route,
+            async (req, _, next) => {
+                if (validators.params) {
+                    const res = validators.params.safeParse(req.params);
+                    if (res.success) {
+                        req.params = res.data;
+                    } else {
+                        next(res.error);
+                    }
                 }
-            }
 
-            if (validators.body) {
-                const res = validators.body.parse(req.body);
-                if (res.success) {
-                    req.body = res.data;
-                } else {
-                    next(res.error);
+                if (validators.body) {
+                    const res = validators.body.safeParse(req.body);
+                    if (res.success) {
+                        req.body = res.data;
+                    } else {
+                        next(res.error);
+                    }
                 }
-            }
 
-            if (validators.query) {
-                const res = validators.query.parse(req.query);
-                if (res.success) {
-                    req.query = res.data;
-                } else {
-                    next(res.error);
+                if (validators.query) {
+                    const res = validators.query.safeParse(req.query);
+                    if (res.success) {
+                        req.query = res.data;
+                    } else {
+                        next(res.error);
+                    }
                 }
-            }
 
-            handler(
-                req as Request<
-                    TParams extends z.ZodType ? z.infer<TParams> : unknown,
-                    any,
-                    TBody extends z.ZodType ? z.infer<TBody> : unknown,
-                    TQuery extends z.ZodType ? z.infer<TQuery> : unknown
-                >,
-                res,
-                next,
-            );
-        });
+                next();
+            },
+            // handler
+            (req, res, next) => {
+                Promise.resolve(
+                    handler(
+                        req as Request<
+                            TParams extends z.ZodType
+                                ? z.infer<TParams>
+                                : unknown,
+                            TResult,
+                            TBody extends z.ZodType ? z.infer<TBody> : unknown,
+                            TQuery extends z.ZodType ? z.infer<TQuery> : unknown
+                        >,
+                        res,
+                        next,
+                    ),
+                )
+                    .then((result) => {
+                        res.json(result).status(200);
+                        next();
+                    })
+                    .catch((err) => {
+                        next(err);
+                    });
+            },
+        );
     }
 
     public getRoutes(): Router {

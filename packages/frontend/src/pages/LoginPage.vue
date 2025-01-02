@@ -16,8 +16,8 @@
 </template>
 
 <script setup lang="ts">
+import { getClaims, selectClaims } from 'src/vendors/internal';
 import ClaimsCard from '../components/ClaimsCard.vue';
-import { getClaims } from 'src/vendors/internal';
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
 
@@ -28,9 +28,6 @@ const res = await getClaims();
 const claimsArray = ref(res.data);
 
 const handleClaimsSelected = (index: number) => {
-    window.open(
-        `http://localhost:3000/internal/resume?session_id=${String(sessionId)}&claims_index=${String(index)}`,
-        '_self',
-    );
+    selectClaims(String(sessionId), index);
 };
 </script>
