@@ -9,7 +9,7 @@
         "dev": "tsx watch ./src/index.ts"
     },
     "dependencies": {
-        "express": "5.0.1",
+        "express": "4.21.2",
         "oidc-provider": "8.6.0",
         "zod": "3.24.1"
     },
