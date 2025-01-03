@@ -6,14 +6,16 @@
     "license": "MIT",
     "private": true,
     "scripts": {
-        "dev": "tsx watch ./src/index.ts"
+        "dev": "tsx watch --inspect ./src/index.ts"
     },
     "dependencies": {
+        "cookie-parser": "1.4.7",
         "express": "4.21.2",
         "oidc-provider": "8.6.0",
         "zod": "3.24.1"
     },
     "devDependencies": {
+        "@types/cookie-parser": "^1.4.8",
         "@types/express": "^5.0.0",
         "@types/oidc-provider": "^8.5.2",
         "tsx": "^4.19.2"

@@ -18,14 +18,26 @@ export abstract class Controller {
         TResult,
         TBody extends z.ZodType | undefined,
         TQuery extends z.ZodType | undefined,
-    >(
-        method: 'get' | 'post' | 'put' | 'delete',
-        route: string,
-        validators: {
+    >({
+        method,
+        route,
+        validators,
+        middlewares = [],
+        handler,
+    }: {
+        method: 'get' | 'post' | 'put' | 'delete';
+        route: string;
+        validators?: {
             body?: TBody;
             query?: TQuery;
             params?: TParams;
-        },
+        };
+        middlewares?: RequestHandler<
+            TParams extends z.ZodType ? z.infer<TParams> : unknown,
+            TResult,
+            TBody extends z.ZodType ? z.infer<TBody> : unknown,
+            TQuery extends z.ZodType ? z.infer<TQuery> : unknown
+        >[];
         handler: (
             request: Request<
                 TParams extends z.ZodType ? z.infer<TParams> : unknown,
@@ -35,12 +47,12 @@ export abstract class Controller {
             >,
             response: Response<TResult>,
             next: RequestHandler,
-        ) => Promise<TResult> | TResult,
-    ) {
+        ) => Promise<TResult> | TResult;
+    }) {
         this.router[method](
             route,
             async (req, _, next) => {
-                if (validators.params) {
+                if (validators?.params) {
                     const res = validators.params.safeParse(req.params);
                     if (res.success) {
                         req.params = res.data;
@@ -49,7 +61,7 @@ export abstract class Controller {
                     }
                 }
 
-                if (validators.body) {
+                if (validators?.body) {
                     const res = validators.body.safeParse(req.body);
                     if (res.success) {
                         req.body = res.data;
@@ -58,7 +70,7 @@ export abstract class Controller {
                     }
                 }
 
-                if (validators.query) {
+                if (validators?.query) {
                     const res = validators.query.safeParse(req.query);
                     if (res.success) {
                         req.query = res.data;
@@ -69,6 +81,7 @@ export abstract class Controller {
 
                 next();
             },
+            ...middlewares,
             // handler
             (req, res, next) => {
                 Promise.resolve(
@@ -86,7 +99,7 @@ export abstract class Controller {
                     ),
                 )
                     .then((result) => {
-                        res.json(result).status(200);
+                        if (!res.headersSent) res.json(result).status(200);
                         next();
                     })
                     .catch((err) => {

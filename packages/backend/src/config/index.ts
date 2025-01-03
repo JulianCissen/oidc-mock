@@ -1,7 +1,9 @@
 import { readFileSync } from 'fs';
 import { z } from 'zod';
 
-const schema = z.object({});
+const schema = z.object({
+    cookieKey: z.string(),
+});
 
 const file = readFileSync('./src/config/development.json', 'utf-8');
 export const config = schema.parse(JSON.parse(file));

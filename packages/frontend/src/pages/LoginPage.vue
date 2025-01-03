@@ -19,15 +19,11 @@
 import { getClaims, selectClaims } from 'src/vendors/internal';
 import ClaimsCard from '../components/ClaimsCard.vue';
 import { ref } from 'vue';
-import { useRoute } from 'vue-router';
-
-const route = useRoute();
-const sessionId = route.query.session_id;
 
 const res = await getClaims();
 const claimsArray = ref(res.data);
 
 const handleClaimsSelected = (index: number) => {
-    selectClaims(String(sessionId), index);
+    selectClaims(index);
 };
 </script>
