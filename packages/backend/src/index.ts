@@ -9,10 +9,9 @@ import cookieParser from 'cookie-parser';
 import { errors } from 'oidc-provider';
 
 const app = express();
-const port = 3000;
 
 app.use(express.json());
-app.use(cookieParser(config.cookieKey));
+app.use(cookieParser(config.cookies.keys));
 app.use((req, _, next) => {
     console.log(`Request: ${req.method} ${req.url}`);
     next();
@@ -40,9 +39,12 @@ app.use((err: unknown, _: Request, res: Response, next: NextFunction) => {
     return;
 });
 
-app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+// Run app on 3000, will only be used internally.
+app.listen(3000, () => {
     console.log(
-        `OIDC is running on http://localhost:${port}/oidc/.well-known/openid-configuration`,
+        `Server is running on http://${config.server.hostname}:${config.server.port}`,
+    );
+    console.log(
+        `OIDC is running on http://${config.server.hostname}:${config.server.port}/oidc/.well-known/openid-configuration`,
     );
 });

@@ -2,7 +2,8 @@ import Provider from 'oidc-provider';
 import { claimSets } from '../../config/claims';
 import { config } from '../../config';
 
-const oidcProvider = new Provider('http://localhost:8080', {
+const oidcProvider = new Provider(config.provider.iss, {
+    clients: config.clients,
     findAccount: (_, id) => {
         const idNumber = parseInt(id, 10);
         const claims = claimSets[idNumber];
@@ -12,20 +13,14 @@ const oidcProvider = new Provider('http://localhost:8080', {
             claims: () => claims,
         };
     },
-    interactions: {
-        url: (_, interaction) => {
-            console.log(interaction.prompt.name);
-            if (interaction.prompt.name === 'login') return '/login';
-            if (interaction.prompt.name === 'consent') return '/consent';
-            return '/';
-        },
-    },
+    // should configure JWKS, but where to set the private key?
     features: {
         devInteractions: { enabled: false },
+        introspection: { enabled: true },
+        jwtIntrospection: { enabled: true, ack: 'draft-10' },
     },
     cookies: {
-        // Replace with a generated cookie key.
-        keys: [config.cookieKey],
+        keys: config.cookies.keys,
         long: {
             signed: true,
             path: '/',
@@ -35,15 +30,15 @@ const oidcProvider = new Provider('http://localhost:8080', {
             path: '/',
         },
     },
-    // initial
-    clients: [
-        {
-            client_id: '123',
-            client_secret: 'secret',
-            redirect_uris: ['http://localhost:8080/cb'],
+    interactions: {
+        url: (_, interaction) => {
+            if (interaction.prompt.name === 'login') return '/login';
+            if (interaction.prompt.name === 'consent') return '/consent';
+            return '/';
         },
-    ],
+    },
     pkce: {
+        // Don't require PKCE since it's a mock server that doesn't serve secure content.
         required: (_1, _2) => false,
     },
 });

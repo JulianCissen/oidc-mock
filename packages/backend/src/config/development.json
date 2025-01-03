@@ -1,3 +1,12 @@
 {
-    "cookieKey": "27826b9193ad53fbd14e7b1a2f0206e5"
+    "provider": {
+        "iss": "http://localhost:8080"
+    },
+    "clients": [
+        {
+            "client_id": "client",
+            "client_secret": "secret",
+            "redirect_uris": ["http://localhost:8080/callback"]
+        }
+    ]
 }
