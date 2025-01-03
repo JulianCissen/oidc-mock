@@ -4,12 +4,15 @@ import express, {
     type Request,
     type Response,
 } from 'express';
+import { config } from './config';
+import cookieParser from 'cookie-parser';
 import { errors } from 'oidc-provider';
 
 const app = express();
 const port = 3000;
 
 app.use(express.json());
+app.use(cookieParser(config.cookieKey));
 app.use((req, _, next) => {
     console.log(`Request: ${req.method} ${req.url}`);
     next();
