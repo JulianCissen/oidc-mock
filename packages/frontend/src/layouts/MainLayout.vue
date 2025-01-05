@@ -1,6 +1,6 @@
 <template>
     <q-layout view="hHh lpr fFf">
-        <q-header class="bg-primary text-white" elevated>
+        <q-header bordered class="bg-primary text-white">
             <q-toolbar>
                 <q-toolbar-title> OIDC Mock Provider </q-toolbar-title>
                 <dark-mode-toggle />
