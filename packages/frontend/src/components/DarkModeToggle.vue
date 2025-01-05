@@ -14,12 +14,10 @@ import { useQuasar } from 'quasar';
 const quasar = useQuasar();
 
 // Initialize darkMode with the value from localStorage.
-const darkMode = ref(window.localStorage.getItem('darkMode') === 'true');
+const darkMode = ref(quasar.dark.isActive);
 // Update dark mode setting based on the value of darkMode.
 watch(darkMode, (value) => {
     quasar.dark.set(value);
     window.localStorage.setItem('darkMode', value.toString());
 });
-// Initialize dark mode setting for Quasar.
-quasar.dark.set(darkMode.value ?? false);
 </script>
