@@ -1,5 +1,5 @@
 <template>
-    <q-card class="custom-card">
+    <q-card bordered class="custom-card" flat>
         <q-card-section>
             <div class="text-h6">sub: {{ claims['sub'] }}</div>
         </q-card-section>
