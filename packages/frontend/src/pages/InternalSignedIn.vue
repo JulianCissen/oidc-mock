@@ -1,7 +1,5 @@
 <template>
-    <q-page class="q-pa-md">
-        <claims-card :claims="authenticationStore.userClaims" readonly />
-    </q-page>
+    <claims-card :claims="authenticationStore.userClaims" readonly />
 </template>
 
 <script setup lang="ts">
