@@ -2,17 +2,22 @@ import type { RouteRecordRaw } from 'vue-router';
 
 const routes: RouteRecordRaw[] = [
     {
-        path: '/login',
+        path: '/',
         component: () => import('layouts/MainLayout.vue'),
         children: [
-            { path: '', component: () => import('pages/LoginPage.vue') },
-        ],
-    },
-    {
-        path: '/consent',
-        component: () => import('layouts/MainLayout.vue'),
-        children: [
-            { path: '', component: () => import('pages/ConsentPage.vue') },
+            { path: '', component: () => import('pages/InternalClient.vue') },
+            {
+                path: '/callback',
+                component: () => import('pages/InternalSignedIn.vue'),
+                meta: {
+                    protected: true,
+                },
+            },
+            { path: '/login', component: () => import('pages/LoginPage.vue') },
+            {
+                path: '/consent',
+                component: () => import('pages/ConsentPage.vue'),
+            },
         ],
     },
 
