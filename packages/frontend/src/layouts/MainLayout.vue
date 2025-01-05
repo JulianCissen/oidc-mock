@@ -4,14 +4,7 @@
             <q-toolbar>
                 <q-toolbar-title> OIDC Mock Provider </q-toolbar-title>
                 <dark-mode-toggle />
-                <q-btn
-                    v-if="authenticationStore.isAuthenticated"
-                    dense
-                    flat
-                    icon="sym_o_logout"
-                    round
-                    @click="authenticationStore.logout()"
-                />
+                <logout-button />
             </q-toolbar>
         </q-header>
 
@@ -30,7 +23,5 @@
 
 <script setup lang="ts">
 import DarkModeToggle from 'src/components/DarkModeToggle.vue';
-import { useAuthenticationStore } from 'src/stores/authentication';
-
-const authenticationStore = useAuthenticationStore();
+import LogoutButton from 'src/components/LogoutButton.vue';
 </script>
