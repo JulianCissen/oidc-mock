@@ -15,7 +15,7 @@
                 </q-page>
                 <template #fallback>
                     <q-page class="flex flex-center">
-                        <q-spinner-gears color="primary" size="100px" />
+                        <indeterminate-circular-progress-indicator />
                     </q-page>
                 </template>
             </Suspense>
@@ -25,5 +25,6 @@
 
 <script setup lang="ts">
 import DarkModeToggle from 'src/components/DarkModeToggle.vue';
+import IndeterminateCircularProgressIndicator from 'src/components/IndeterminateCircularProgressIndicator.vue';
 import LogoutButton from 'src/components/LogoutButton.vue';
 </script>
