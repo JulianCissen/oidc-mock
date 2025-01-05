@@ -10,7 +10,9 @@
 
         <q-page-container>
             <Suspense>
-                <router-view />
+                <q-page class="q-pa-md">
+                    <router-view />
+                </q-page>
                 <template #fallback>
                     <q-page class="flex flex-center">
                         <q-spinner-gears color="primary" size="100px" />

@@ -1,18 +1,16 @@
 <template>
-    <q-page class="q-pa-md">
-        <div class="q-col-gutter-md row">
-            <div
-                v-for="(claims, index) in claimsArray"
-                :key="index"
-                class="col-12 col-md-6 col-lg-4"
-            >
-                <claims-card
-                    :claims="claims"
-                    @click="handleClaimsSelected(index)"
-                />
-            </div>
+    <div class="q-col-gutter-md row">
+        <div
+            v-for="(claims, index) in claimsArray"
+            :key="index"
+            class="col-12 col-md-6 col-lg-4"
+        >
+            <claims-card
+                :claims="claims"
+                @click="handleClaimsSelected(index)"
+            />
         </div>
-    </q-page>
+    </div>
 </template>
 
 <script setup lang="ts">

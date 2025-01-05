@@ -1,9 +1,7 @@
 <template>
-    <q-page class="q-pa-md">
-        <div class="column items-center">
-            <filled-button label="Login" @click="login" />
-        </div>
-    </q-page>
+    <div class="column items-center">
+        <filled-button label="Login" @click="login" />
+    </div>
 </template>
 
 <script setup lang="ts">
