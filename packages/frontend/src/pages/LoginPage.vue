@@ -18,10 +18,11 @@ import { getClaims, selectClaims } from 'src/vendors/internal';
 import ClaimsCard from '../components/ClaimsCard.vue';
 import { ref } from 'vue';
 
-const res = await getClaims();
-const claimsArray = ref(res.data);
+const claimsArray = ref<Record<string, unknown>[]>([]);
+const res = await getClaims()();
+if (res.success) claimsArray.value = res.response.data;
 
 const handleClaimsSelected = (index: number) => {
-    selectClaims(index);
+    selectClaims()(index);
 };
 </script>
