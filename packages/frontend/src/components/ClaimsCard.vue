@@ -26,7 +26,6 @@
 
 <script setup lang="ts">
 import FilledButton from './FilledButton.vue';
-import { defineProps } from 'vue';
 
 type Props = {
     claims: Record<string, unknown>;
