@@ -2,14 +2,15 @@
     <q-layout view="hHh lpr fFf">
         <q-header class="bg-primary text-white" elevated>
             <q-toolbar>
-                <q-toolbar-title>
-                    <!--<q-avatar>
-                        <img
-                            src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg"
-                        />
-                    </q-avatar>-->
-                    OIDC Mock Provider
-                </q-toolbar-title>
+                <q-toolbar-title> OIDC Mock Provider </q-toolbar-title>
+                <q-btn
+                    v-if="authenticationStore.isAuthenticated"
+                    dense
+                    flat
+                    icon="sym_o_logout"
+                    round
+                    @click="authenticationStore.logout()"
+                />
             </q-toolbar>
         </q-header>
 
@@ -26,4 +27,8 @@
     </q-layout>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useAuthenticationStore } from 'src/stores/authentication';
+
+const authenticationStore = useAuthenticationStore();
+</script>

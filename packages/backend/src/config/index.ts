@@ -17,6 +17,7 @@ const schema = z.object({
             client_id: z.string(),
             client_secret: z.string(),
             redirect_uris: z.array(z.string()),
+            post_logout_redirect_uris: z.array(z.string()),
             grant_types: z
                 .array(z.enum(['authorization_code']))
                 .default(['authorization_code']),

@@ -18,7 +18,7 @@
                 </q-item>
             </q-list>
         </q-card-section>
-        <q-card-actions align="right">
+        <q-card-actions v-if="!readonly" align="right">
             <filled-button label="Use claims" @click="useClaims" />
         </q-card-actions>
     </q-card>
@@ -30,8 +30,11 @@ import { defineProps } from 'vue';
 
 type Props = {
     claims: Record<string, unknown>;
+    readonly?: boolean;
 };
-defineProps<Props>();
+withDefaults(defineProps<Props>(), {
+    readonly: false,
+});
 
 const emit = defineEmits(['use-claims']);
 const useClaims = () => {

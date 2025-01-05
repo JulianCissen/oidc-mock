@@ -18,7 +18,27 @@ const oidcProvider = new Provider(config.provider.iss, {
         devInteractions: { enabled: false },
         introspection: { enabled: true },
         jwtIntrospection: { enabled: true, ack: 'draft-10' },
+        rpInitiatedLogout: {
+            enabled: true,
+            logoutSource: (ctx, form) => {
+                ctx.body = `<!DOCTYPE html>
+                            <html>
+                            <head>
+                                <title>Logging out...</title>
+                            </head>
+                            <body>
+                                <div>
+                                    ${form}
+                                    <script>
+                                    document.forms['op.logoutForm'].submit();
+                                    </script>
+                                </div>
+                            </body>
+                            </html>`;
+            },
+        },
     },
+    clientBasedCORS: (_1, _2, _3) => true,
     cookies: {
         keys: config.cookies.keys,
         long: {
@@ -43,5 +63,12 @@ const oidcProvider = new Provider(config.provider.iss, {
     },
 });
 oidcProvider.proxy = true;
+// Set custom behavior to destroy session on rp-initiated logout.
+oidcProvider.use(async (ctx, next) => {
+    await next();
+    if (ctx['oidc']['route'] === 'end_session_confirm') {
+        ctx['oidc']['session'].destroy();
+    }
+});
 
 export { oidcProvider };

@@ -6,7 +6,8 @@
         {
             "client_id": "client",
             "client_secret": "secret",
-            "redirect_uris": ["http://localhost:8080/callback"]
+            "redirect_uris": ["http://localhost:8080/callback"],
+            "post_logout_redirect_uris": ["http://localhost:8080"]
         }
     ]
 }
