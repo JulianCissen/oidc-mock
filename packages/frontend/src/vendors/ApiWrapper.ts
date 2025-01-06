@@ -1,5 +1,6 @@
 import { type RouteLocationRaw, useRouter } from 'vue-router';
 import type { AxiosResponse } from 'axios';
+import { useErrorStore } from 'src/stores/error';
 
 type SuccessResult<T> = {
     success: true;
@@ -18,12 +19,10 @@ export const apiWrapper = <
     /* eslint-enable @typescript-eslint/no-explicit-any */
 >(
     fn: (...args: Args) => Promise<Ret>,
-): ((
-    redirectOnFail?: RouteLocationRaw,
-) => (...args: Args) => Promise<Result<Ret>>) => {
-    return (redirectOnFail?: RouteLocationRaw) => {
+): ((setErrorState?: boolean) => (...args: Args) => Promise<Result<Ret>>) => {
+    return (setErrorState?: boolean) => {
         return async (...args: Args): Promise<Result<Ret>> => {
-            const router = useRouter();
+            const errorStore = useErrorStore();
 
             try {
                 const response = await fn(...args);
@@ -32,7 +31,7 @@ export const apiWrapper = <
                     response,
                 };
             } catch (error) {
-                if (redirectOnFail) router.push(redirectOnFail);
+                if (setErrorState) errorStore.setGenericError();
                 return {
                     success: false,
                     error,
