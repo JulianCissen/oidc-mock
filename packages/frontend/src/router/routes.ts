@@ -6,18 +6,25 @@ const routes: RouteRecordRaw[] = [
         path: '/',
         component: () => import('layouts/MainLayout.vue'),
         children: [
-            { path: '', component: () => import('pages/InternalClient.vue') },
+            {
+                path: '',
+                component: () => import('pages/InternalClientLanding.vue'),
+            },
             {
                 path: '/callback',
-                component: () => import('pages/InternalSignedIn.vue'),
+                component: () =>
+                    import('pages/InternalClientAuthenticated.vue'),
                 meta: {
                     protected: true,
                 },
             },
-            { path: '/login', component: () => import('pages/LoginPage.vue') },
+            {
+                path: '/login',
+                component: () => import('pages/ClaimsSelection.vue'),
+            },
             {
                 path: '/consent',
-                component: () => import('pages/ConsentPage.vue'),
+                component: () => import('pages/LoginConsent.vue'),
             },
         ],
     },
