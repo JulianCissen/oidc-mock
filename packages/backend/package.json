@@ -6,13 +6,16 @@
     "license": "MIT",
     "private": true,
     "scripts": {
-        "dev": "tsx watch --inspect ./src/index.ts"
+        "dev": "tsx watch --inspect ./src/index.ts | pino-pretty"
     },
     "dependencies": {
         "cookie-parser": "1.4.7",
         "express": "4.21.2",
         "jose": "5.9.6",
         "oidc-provider": "8.6.0",
+        "pino": "9.6.0",
+        "pino-http": "10.3.0",
+        "pino-pretty": "13.0.0",
         "zod": "3.24.1"
     },
     "devDependencies": {

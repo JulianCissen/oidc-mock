@@ -7,15 +7,13 @@ import express, {
 import { config } from './config';
 import cookieParser from 'cookie-parser';
 import { errors } from 'oidc-provider';
+import { httpLogger } from './utils/logger';
 
 const app = express();
 
 app.use(express.json());
 app.use(cookieParser(config.cookies.keys));
-app.use((req, _, next) => {
-    console.log(`Request: ${req.method} ${req.url}`);
-    next();
-});
+app.use(httpLogger);
 app.use('/oidc', oidcProvider.callback());
 app.use('/auth', authController.getRoutes());
 // Generic error handler.
