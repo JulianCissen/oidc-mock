@@ -1,10 +1,6 @@
 <template>
     <q-layout view="hHh lpr fFf">
-        <q-header
-            v-if="!errorStore.errored"
-            bordered
-            class="bg-primary text-white"
-        >
+        <q-header v-if="!errorStore.errored" bordered>
             <q-toolbar>
                 <q-toolbar-title> OIDC Mock Provider </q-toolbar-title>
                 <dark-mode-toggle />
