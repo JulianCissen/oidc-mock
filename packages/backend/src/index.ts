@@ -4,10 +4,10 @@ import express, {
     type Request,
     type Response,
 } from 'express';
+import { httpLogger, logger } from './utils/logger';
 import { config } from './config';
 import cookieParser from 'cookie-parser';
 import { errors } from 'oidc-provider';
-import { httpLogger } from './utils/logger';
 
 const app = express();
 
@@ -32,17 +32,17 @@ app.use((err: unknown, _: Request, res: Response, next: NextFunction) => {
         return;
     }
     // Handle generic errors.
-    console.log(err);
+    logger.error(err);
     res.status(500).send('Internal server error');
     return;
 });
 
 // Run app on 3000, will only be used internally.
 app.listen(3000, () => {
-    console.log(
+    logger.info(
         `Server is running on http://${config.server.hostname}:${config.server.port}`,
     );
-    console.log(
+    logger.info(
         `OIDC is running on http://${config.server.hostname}:${config.server.port}/oidc/.well-known/openid-configuration`,
     );
 });

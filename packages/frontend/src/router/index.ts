@@ -50,7 +50,6 @@ export default defineRouter(function (/* { store, ssrContext } */) {
                 next(to);
                 return;
             } catch (err) {
-                console.error(err);
                 next('/');
                 return;
             }
