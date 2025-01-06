@@ -1,4 +1,5 @@
 import type { RouteRecordRaw } from 'vue-router';
+import { useErrorStore } from 'src/stores/error';
 
 const routes: RouteRecordRaw[] = [
     {
@@ -25,7 +26,11 @@ const routes: RouteRecordRaw[] = [
     // but you can also remove it
     {
         path: '/:catchAll(.*)*',
-        component: () => import('pages/ErrorNotFound.vue'),
+        component: () => import('pages/GenericError.vue'),
+        beforeEnter: () => {
+            const errorStore = useErrorStore();
+            errorStore.setNotFound();
+        },
     },
 ];
 
