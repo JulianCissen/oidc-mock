@@ -19,10 +19,10 @@ import ClaimsCard from '../components/ClaimsCard.vue';
 import { ref } from 'vue';
 
 const claimsArray = ref<Record<string, unknown>[]>([]);
-const res = await getClaims()();
+const res = await getClaims(true)();
 if (res.success) claimsArray.value = res.response.data;
 
 const handleClaimsSelected = (index: number) => {
-    selectClaims()(index);
+    selectClaims(true)(index);
 };
 </script>

@@ -8,5 +8,5 @@
 import IndeterminateCircularProgressIndicator from 'src/components/IndeterminateCircularProgressIndicator.vue';
 import { grantConsent } from 'src/vendors/internal';
 
-grantConsent()();
+grantConsent(true)();
 </script>
