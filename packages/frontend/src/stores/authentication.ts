@@ -1,5 +1,5 @@
 import { acceptHMRUpdate, defineStore } from 'pinia';
-import { oidcClient } from 'src/utils/internalClient';
+import { userManager } from 'src/utils/internalClient';
 
 export const useAuthenticationStore = defineStore('authentication', {
     state: () => ({
@@ -17,8 +17,7 @@ export const useAuthenticationStore = defineStore('authentication', {
         },
         async logout() {
             this.claims = {};
-            const req = await oidcClient.createSignoutRequest();
-            window.location.href = req.url;
+            await userManager.signoutRedirect();
         },
     },
 });

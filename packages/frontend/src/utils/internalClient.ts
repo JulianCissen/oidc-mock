@@ -1,6 +1,6 @@
-import { OidcClient } from 'oidc-client-ts';
+import { UserManager } from 'oidc-client-ts';
 
-export const oidcClient = new OidcClient({
+export const userManager = new UserManager({
     client_id: 'client',
     client_secret: 'secret',
     client_authentication: 'client_secret_basic',

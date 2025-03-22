@@ -6,10 +6,7 @@
 
 <script setup lang="ts">
 import FilledButton from 'src/components/FilledButton.vue';
-import { oidcClient } from 'src/utils/internalClient';
+import { userManager } from 'src/utils/internalClient';
 
-const login = async () => {
-    const req = await oidcClient.createSigninRequest({});
-    window.location.href = req.url;
-};
+const login = async () => await userManager.signinRedirect();
 </script>
