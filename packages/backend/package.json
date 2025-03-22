@@ -6,7 +6,8 @@
     "license": "MIT",
     "private": true,
     "scripts": {
-        "dev": "tsx watch --inspect ./src/index.ts | pino-pretty"
+        "dev": "tsx watch --inspect ./src/index.ts | pino-pretty",
+        "build": "tsc"
     },
     "dependencies": {
         "cookie-parser": "1.4.7",
