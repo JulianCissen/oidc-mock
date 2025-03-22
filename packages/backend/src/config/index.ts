@@ -1,5 +1,5 @@
+import { existsSync, readFileSync } from 'fs';
 import crypto from 'crypto';
-import { readFileSync } from 'fs';
 import { z } from 'zod';
 
 const schema = z.object({
@@ -39,5 +39,17 @@ const schema = z.object({
         .default({}),
 });
 
-const file = readFileSync('./src/config/development.json', 'utf-8');
+const configFilePath =
+    process.env['CUSTOM_SERVER_CONFIG_PATH'] &&
+    existsSync(process.env['CUSTOM_SERVER_CONFIG_PATH'])
+        ? process.env['CUSTOM_SERVER_CONFIG_PATH']
+        : process.env['NODE_ENV'] === 'development'
+          ? './src/config/development.json'
+          : (() => {
+                throw new Error(
+                    'CUSTOM_SERVER_CONFIG_PATH is not defined in production.',
+                );
+            })();
+
+const file = readFileSync(configFilePath, 'utf-8');
 export const config = schema.parse(JSON.parse(file));
