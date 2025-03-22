@@ -1,13 +1,8 @@
-import { existsSync, readFileSync } from 'fs';
 import crypto from 'crypto';
+import { getFileRefFromEnv } from '../utils/getFileRefFromEnv';
+import { readFileSync } from 'fs';
+import { replaceEnvVars } from '../utils/replaceEnvVars';
 import { z } from 'zod';
-
-// Function to replace ${PORT} placeholders with the actual PORT env variable
-const replaceEnvVars = (jsonString: string): string => {
-    // Use the PORT environment variable directly without hardcoding default
-    const port = process.env['PORT']!;
-    return jsonString.replace(/\$\{PORT\}/g, port);
-};
 
 const schema = z.object({
     provider: z.object({
@@ -40,17 +35,10 @@ const schema = z.object({
         .default({}),
 });
 
-const configFilePath =
-    process.env['CUSTOM_SERVER_CONFIG_PATH'] &&
-    existsSync(process.env['CUSTOM_SERVER_CONFIG_PATH'])
-        ? process.env['CUSTOM_SERVER_CONFIG_PATH']
-        : process.env['NODE_ENV'] === 'development'
-          ? './src/config/development.json'
-          : (() => {
-                throw new Error(
-                    'CUSTOM_SERVER_CONFIG_PATH is not defined in production.',
-                );
-            })();
+const configFilePath = getFileRefFromEnv(
+    'CUSTOM_SERVER_CONFIG_PATH',
+    './src/config/development.json',
+);
 
 const file = readFileSync(configFilePath, 'utf-8');
 // Process environment variables before parsing JSON
