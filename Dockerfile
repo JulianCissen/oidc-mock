@@ -3,7 +3,7 @@ FROM node:22-alpine AS development
 # Install Nginx
 RUN apk add --no-cache nginx
 # Copy custom Nginx configuration
-COPY ./nginx.conf /etc/nginx/nginx.conf
+COPY ./nginx.development.conf /etc/nginx/nginx.conf
 # Expose ports
 EXPOSE 8080
 # Start nginx
@@ -41,7 +41,7 @@ WORKDIR /app
 # Install Nginx
 RUN apk add --no-cache nginx
 # Copy Nginx configuration
-COPY ./nginx.conf /etc/nginx/nginx.conf
+COPY ./nginx.production.conf /etc/nginx/nginx.conf
 # Copy frontend build output to Nginx html directory
 COPY --from=frontend-build /app/frontend/dist/spa /usr/share/nginx/html
 # Copy backend build output
