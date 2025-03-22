@@ -2,13 +2,14 @@ import { existsSync, readFileSync } from 'fs';
 import crypto from 'crypto';
 import { z } from 'zod';
 
+// Function to replace ${PORT} placeholders with the actual PORT env variable
+const replaceEnvVars = (jsonString: string): string => {
+    // Use the PORT environment variable directly without hardcoding default
+    const port = process.env['PORT']!;
+    return jsonString.replace(/\$\{PORT\}/g, port);
+};
+
 const schema = z.object({
-    server: z
-        .object({
-            hostname: z.string().default('localhost'),
-            port: z.number().default(8080),
-        })
-        .default({}),
     provider: z.object({
         iss: z.string(),
     }),
@@ -52,4 +53,6 @@ const configFilePath =
             })();
 
 const file = readFileSync(configFilePath, 'utf-8');
-export const config = schema.parse(JSON.parse(file));
+// Process environment variables before parsing JSON
+const processedFile = replaceEnvVars(file);
+export const config = schema.parse(JSON.parse(processedFile));

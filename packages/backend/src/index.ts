@@ -5,6 +5,7 @@ import express, {
     type Response,
 } from 'express';
 import { httpLogger, logger } from './utils/logger';
+import { URL } from 'url';
 import { config } from './config';
 import cookieParser from 'cookie-parser';
 import { errors } from 'oidc-provider';
@@ -39,10 +40,11 @@ app.use((err: unknown, _: Request, res: Response, next: NextFunction) => {
 
 // Run app on 3000, will only be used internally.
 app.listen(3000, () => {
+    // Get the base URL from the configured issuer
+    const issUrl = new URL(config.provider.iss);
+
+    logger.info(`Server is running on ${issUrl.href}`);
     logger.info(
-        `Server is running on http://${config.server.hostname}:${config.server.port}`,
-    );
-    logger.info(
-        `OIDC is running on http://${config.server.hostname}:${config.server.port}/oidc/.well-known/openid-configuration`,
+        `OIDC is running on ${issUrl.href}/oidc/.well-known/openid-configuration`,
     );
 });

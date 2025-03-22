@@ -12,7 +12,10 @@ cd ../..
 # Remove any existing container with the same name
 docker rm -f oidc-mock-dev 2>/dev/null || true
 
+# Default port is 8080 if not provided
+PORT=${1:-8080}
+
 docker build --target development -t oidc-mock .
-docker run --name oidc-mock-dev -p 8080:8080 oidc-mock
+docker run --name oidc-mock-dev -p $PORT:$PORT -e PORT=$PORT oidc-mock
 
 $SHELL
