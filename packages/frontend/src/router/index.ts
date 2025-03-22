@@ -5,9 +5,9 @@ import {
     createWebHistory,
 } from 'vue-router';
 import { defineRouter } from '#q-app/wrappers';
-import { oidcClient } from 'src/utils/internalClient';
 import routes from './routes';
 import { useAuthenticationStore } from 'src/stores/authentication';
+import { userManager } from 'src/utils/internalClient';
 
 /*
  * If not building with SSR mode, you can
@@ -41,10 +41,11 @@ export default defineRouter(function (/* { store, ssrContext } */) {
     Router.beforeEach(async (to, _, next) => {
         if (to.query['code']) {
             try {
-                const authResponse = await oidcClient.processSigninResponse(
+                const res = await userManager.signinCallback(
                     window.location.href,
                 );
-                authenticationStore.setUserClaims(authResponse.profile);
+                if (!res) throw new Error('No response from signinCallback');
+                authenticationStore.setUserClaims(res.profile);
                 // Clear query params.
                 to.query = {};
                 next(to);
