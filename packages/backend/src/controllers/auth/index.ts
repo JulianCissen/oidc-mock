@@ -1,5 +1,4 @@
 import { Controller } from '../Controller';
-import type { Grant } from 'oidc-provider';
 import type { RequestHandler } from 'express';
 import { claimSets } from '../../config/claims';
 import { oidcProvider } from '../oidc';
@@ -63,28 +62,29 @@ class AuthController extends Controller {
             route: '/consent',
             middlewares: [noCacheMiddleware],
             handler: async (req, res) => {
-                const interactionDetails =
-                    await oidcProvider.interactionDetails(req, res);
                 const {
                     prompt: { name, details },
                     params,
-                    // @ts-expect-error test
-                    session: { accountId },
-                } = interactionDetails;
+                    grantId: existingGrantId,
+                    session,
+                } = await oidcProvider.interactionDetails(req, res);
+
                 if (name !== 'consent') {
                     throw new Error('Expected consent prompt');
                 }
+                // Ensure session exists and get accountId
+                if (!session) {
+                    throw new Error('No session found');
+                }
+                const { accountId } = session;
 
-                let { grantId } = interactionDetails;
-                let grant: Grant;
-
-                if (grantId) {
-                    const foundGrant = await oidcProvider.Grant.find(grantId);
-                    if (!foundGrant) {
-                        throw new Error('Grant not found');
-                    }
-                    grant = foundGrant;
-                } else {
+                // Create grant or use existing one
+                let grant;
+                if (existingGrantId) {
+                    grant = await oidcProvider.Grant.find(existingGrantId);
+                }
+                // Create new grant if none exists
+                if (!grant) {
                     grant = new oidcProvider.Grant({
                         accountId,
                         clientId: String(params['client_id']),
@@ -93,33 +93,34 @@ class AuthController extends Controller {
 
                 const parsedDetails = missingDetailsValidator.parse(details);
 
-                if (parsedDetails.missingOIDCScope) {
+                // Add missing scopes and claims
+                if (parsedDetails.missingOIDCScope?.length)
                     grant.addOIDCScope(
                         parsedDetails.missingOIDCScope.join(' '),
                     );
-                }
-                if (parsedDetails.missingOIDCClaims) {
+                if (parsedDetails.missingOIDCClaims?.length)
                     grant.addOIDCClaims(parsedDetails.missingOIDCClaims);
-                }
+
+                // Add resource scopes if present
                 if (parsedDetails.missingResourceScopes) {
-                    for (const [indicator, scopes] of Object.entries(
-                        parsedDetails.missingResourceScopes,
-                    )) {
-                        grant.addResourceScope(indicator, scopes.join(' '));
-                    }
+                    Object.entries(parsedDetails.missingResourceScopes).forEach(
+                        ([indicator, scopes]) => {
+                            grant.addResourceScope(indicator, scopes.join(' '));
+                        },
+                    );
                 }
 
-                grantId = await grant.save();
+                const grantId = await grant.save();
+                const consent = !existingGrantId ? { grantId } : {};
 
-                const consent: { grantId?: string } = {};
-                if (!interactionDetails.grantId) {
-                    consent.grantId = grantId;
-                }
-
-                const result = { consent };
-                await oidcProvider.interactionFinished(req, res, result, {
-                    mergeWithLastSubmission: true,
-                });
+                await oidcProvider.interactionFinished(
+                    req,
+                    res,
+                    { consent },
+                    {
+                        mergeWithLastSubmission: true,
+                    },
+                );
             },
         });
         this.createRoute({
