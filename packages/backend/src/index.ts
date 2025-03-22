@@ -45,6 +45,6 @@ app.listen(3000, () => {
 
     logger.info(`Server is running on ${issUrl.href}`);
     logger.info(
-        `OIDC is running on ${issUrl.href}/oidc/.well-known/openid-configuration`,
+        `OIDC is running on ${issUrl.href}oidc/.well-known/openid-configuration`,
     );
 });
