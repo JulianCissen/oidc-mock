@@ -29,3 +29,15 @@ docker run -p 8080:8080 \
 If no custom server configuration file is provided:
 - In **production**, the default server configuration file is located at `/app/backend/defaults/development.json`.
 - In **development**, the `./src/config/development.json` file will be used as a fallback if `CUSTOM_SERVER_CONFIG_PATH` is not defined.
+
+# Custom Port Configuration
+
+You can specify a custom port for the Nginx server by setting the `PORT` environment variable:
+
+```bash
+docker run -p 9000:9000 \
+    -e PORT=9000 \
+    oidc-mock:1.0.0
+```
+
+If no port is specified, the default port 8080 will be used.
