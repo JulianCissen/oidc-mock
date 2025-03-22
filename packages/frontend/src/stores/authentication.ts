@@ -15,6 +15,16 @@ export const useAuthenticationStore = defineStore('authentication', {
         setUserClaims(claims: Record<string, unknown>) {
             this.claims = claims;
         },
+        async checkUserSession() {
+            try {
+                const user = await userManager.getUser();
+                if (user && !user.expired) {
+                    this.setUserClaims(user.profile);
+                }
+            } catch (err) {
+                console.error('Error checking user session:', err);
+            }
+        },
         async logout() {
             this.claims = {};
             await userManager.signoutRedirect();
