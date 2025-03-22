@@ -40,6 +40,8 @@ FROM node:22-alpine AS production
 WORKDIR /app
 # Install Nginx
 RUN apk add --no-cache nginx
+# Install dumb-init for proper signal handling
+RUN apk add --no-cache dumb-init
 # Copy Nginx configuration
 COPY ./nginx.production.conf /etc/nginx/nginx.conf
 # Copy frontend build output to Nginx html directory
@@ -62,5 +64,5 @@ ENV NODE_ENV=production
 
 # Expose ports
 EXPOSE 8080
-# Start both Nginx and backend server
-CMD ["sh", "-c", "nginx -g 'daemon off;' & node /app/backend/index.js"]
+# Start both Nginx and backend server using dumb-init
+CMD ["dumb-init", "sh", "-c", "nginx -g 'daemon off;' & node /app/backend/index.js"]
