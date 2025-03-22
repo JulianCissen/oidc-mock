@@ -1,4 +1,5 @@
-import { existsSync, readFileSync } from 'fs';
+import { getFileRefFromEnv } from '../utils/getFileRefFromEnv';
+import { readFileSync } from 'fs';
 import { z } from 'zod';
 
 const claimsSchema = z.array(
@@ -7,17 +8,10 @@ const claimsSchema = z.array(
     }),
 );
 
-const claimsFilePath =
-    process.env['CUSTOM_CLAIMS_PATH'] &&
-    existsSync(process.env['CUSTOM_CLAIMS_PATH'])
-        ? process.env['CUSTOM_CLAIMS_PATH']
-        : process.env['NODE_ENV'] === 'development'
-          ? './src/config/claims.json'
-          : (() => {
-                throw new Error(
-                    'CUSTOM_CLAIMS_PATH is not defined in production.',
-                );
-            })();
+const claimsFilePath = getFileRefFromEnv(
+    'CUSTOM_CLAIMS_PATH',
+    './src/config/claims.json',
+);
 
 const file = readFileSync(claimsFilePath, 'utf-8');
 export const claimSets = claimsSchema.parse(JSON.parse(file));
