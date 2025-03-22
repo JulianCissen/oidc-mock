@@ -58,6 +58,23 @@ export default defineRouter(function (/* { store, ssrContext } */) {
         next();
     });
 
+    // Check if the user is already logged in with the OIDC provider.
+    Router.beforeEach(async (to, _, next) => {
+        if (!authenticationStore.isAuthenticated) {
+            try {
+                const user = await userManager.getUser();
+                if (user && !user.expired) {
+                    authenticationStore.setUserClaims(user.profile);
+                    next('/callback'); // Redirect to callback route
+                    return;
+                }
+            } catch (err) {
+                console.error('Error checking user session:', err);
+            }
+        }
+        next();
+    });
+
     // Protect routes that require authentication.
     Router.beforeEach((to, _, next) => {
         if (to.meta.protected && !authenticationStore.isAuthenticated) {
