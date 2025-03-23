@@ -13,6 +13,7 @@ This project consists of:
 - Complete OIDC authentication flow with authorization code grant
 - Customizable user claims
 - Customizable server configuration
+- Configurable token lifetimes
 - Dark mode support
 - Docker containerization for easy deployment
 
@@ -94,8 +95,22 @@ The server configuration file should be a JSON file with the following structure
     {
       "client_id": "my-client",
       "client_secret": "my-secret",
+      "application_type": "web",
       "redirect_uris": ["https://my-app.example.com/callback"],
-      "post_logout_redirect_uris": ["https://my-app.example.com"]
+      "post_logout_redirect_uris": ["https://my-app.example.com"],
+      "grant_types": ["authorization_code", "refresh_token"],
+      "tokenLifetimes": {
+        "accessToken": 7200,
+        "authorizationCode": 600,
+        "backchannelAuthenticationRequest": 600,
+        "clientCredentials": 600,
+        "deviceCode": 600,
+        "grant": 1209600,
+        "idToken": 3600,
+        "interaction": 3600,
+        "refreshToken": 604800,
+        "session": 86400
+      }
     }
   ],
   "cookies": {
@@ -108,8 +123,23 @@ The server configuration file should be a JSON file with the following structure
 - `clients`: An array of client configurations
   - `client_id`: The client identifier
   - `client_secret`: The client secret
+  - `application_type`: The type of application (optional, defaults to "web")
+    - `web`: Server-side web applications that can maintain client secrets
+    - `native`: Native applications (mobile, desktop) that can't securely store client secrets
   - `redirect_uris`: Array of valid redirect URIs after authentication
   - `post_logout_redirect_uris`: Array of valid redirect URIs after logout
+  - `grant_types`: Array of grant types (defaults to ["authorization_code", "refresh_token"])
+  - `tokenLifetimes`: Client-specific token lifetimes (all optional with defaults)
+    - `accessToken`: Access token lifetime in seconds (default: 3600 - 1 hour)
+    - `authorizationCode`: Authorization code lifetime in seconds (default: 60 - 1 minute)
+    - `backchannelAuthenticationRequest`: Backchannel authentication request lifetime (default: 600 - 10 minutes)
+    - `clientCredentials`: Client credentials token lifetime in seconds (default: 600 - 10 minutes)
+    - `deviceCode`: Device code lifetime in seconds (default: 600 - 10 minutes)
+    - `grant`: Grant lifetime in seconds (default: 1209600 - 14 days)
+    - `idToken`: ID token lifetime in seconds (default: 3600 - 1 hour)
+    - `interaction`: Interaction lifetime in seconds (default: 3600 - 1 hour)
+    - `refreshToken`: Refresh token lifetime in seconds (default: 604800 - 7 days)
+    - `session`: Session lifetime in seconds (default: 86400 - 24 hours)
 - `cookies.keys`: Optional encryption keys for cookies (will be auto-generated if not provided)
 
 You can use environment variables in your configuration file using `${VARIABLE_NAME}` syntax. For example:
