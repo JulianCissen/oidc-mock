@@ -11,6 +11,7 @@ import { z } from 'zod';
 const schema = z.object({
     provider: z.object({
         iss: z.string(),
+        tokenLifetimes: tokenLifetimesSchema.default(DEFAULT_TOKEN_LIFETIMES),
     }),
     clients: z.array(
         z.object({
@@ -26,9 +27,7 @@ const schema = z.object({
             token_endpoint_auth_method: z
                 .enum(['client_secret_basic'])
                 .default('client_secret_basic'),
-            tokenLifetimes: tokenLifetimesSchema.default(
-                DEFAULT_TOKEN_LIFETIMES,
-            ),
+            tokenLifetimes: tokenLifetimesSchema.partial().default({}),
         }),
     ),
     cookies: z

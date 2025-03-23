@@ -52,22 +52,16 @@ export const DEFAULT_TOKEN_LIFETIMES = {
  * Zod schema for token lifetimes configuration
  */
 export const tokenLifetimesSchema = z.object({
-    accessToken: z.number().default(DEFAULT_TOKEN_LIFETIMES.accessToken),
-    authorizationCode: z
-        .number()
-        .default(DEFAULT_TOKEN_LIFETIMES.authorizationCode),
-    backchannelAuthenticationRequest: z
-        .number()
-        .default(DEFAULT_TOKEN_LIFETIMES.backchannelAuthenticationRequest),
-    clientCredentials: z
-        .number()
-        .default(DEFAULT_TOKEN_LIFETIMES.clientCredentials),
-    deviceCode: z.number().default(DEFAULT_TOKEN_LIFETIMES.deviceCode),
-    grant: z.number().default(DEFAULT_TOKEN_LIFETIMES.grant),
-    idToken: z.number().default(DEFAULT_TOKEN_LIFETIMES.idToken),
-    interaction: z.number().default(DEFAULT_TOKEN_LIFETIMES.interaction),
-    refreshToken: z.number().default(DEFAULT_TOKEN_LIFETIMES.refreshToken),
-    session: z.number().default(DEFAULT_TOKEN_LIFETIMES.session),
+    accessToken: z.number(),
+    authorizationCode: z.number(),
+    backchannelAuthenticationRequest: z.number(),
+    clientCredentials: z.number(),
+    deviceCode: z.number(),
+    grant: z.number(),
+    idToken: z.number(),
+    interaction: z.number(),
+    refreshToken: z.number(),
+    session: z.number(),
 });
 
 /**
@@ -76,19 +70,14 @@ export const tokenLifetimesSchema = z.object({
  * @returns The token lifetimes for the client.
  */
 export const getClientTTLs = (
-    client: Client,
-): (typeof config.clients)[number]['tokenLifetimes'] => {
+    client?: Client,
+): typeof config.provider.tokenLifetimes => {
     const clientConfig = config.clients.find(
-        (c) => c.client_id === client.clientId,
+        (c) => c.client_id === client?.clientId,
     );
 
-    if (!clientConfig || !clientConfig.tokenLifetimes) {
-        throw new Error(
-            `No token lifetimes found for client: ${client.clientId}`,
-        );
-    }
-
-    return clientConfig.tokenLifetimes;
+    const defaultsCopy = structuredClone(config.provider.tokenLifetimes);
+    return Object.assign(defaultsCopy, clientConfig?.tokenLifetimes || {});
 };
 
 /**
