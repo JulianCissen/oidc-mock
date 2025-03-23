@@ -33,10 +33,6 @@
     },
     "plugins": [
         {
-            "type": "node-workspace",
-            "merge": false
-        },
-        {
             "type": "linked-versions",
             "groupName": "oidc-mock",
             "components": ["backend", "frontend"]
