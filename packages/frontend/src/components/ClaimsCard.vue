@@ -6,14 +6,16 @@
         <q-card-section>
             <q-list>
                 <q-item
-                    v-for="[key, value] in Object.entries(claims)"
-                    :key="key"
+                    v-for="[claimKey, claimValue] in Object.entries(claims)"
+                    :key="claimKey"
                 >
                     <q-item-section>
-                        <q-item-label>{{ key }}</q-item-label>
-                        <q-item-label caption>{{
-                            JSON.stringify(value, null, 2)
+                        <q-item-label class="text-weight-medium">{{
+                            claimKey
                         }}</q-item-label>
+                        <q-item-label caption class="claim-value">
+                            {{ JSON.stringify(claimValue, null, 2) }}
+                        </q-item-label>
                     </q-item-section>
                 </q-item>
             </q-list>
@@ -44,5 +46,10 @@ const useClaims = () => {
 <style scoped lang="scss">
 .custom-card {
     width: 100%;
+}
+
+.claim-value {
+    font-family: monospace;
+    white-space: pre-wrap;
 }
 </style>
