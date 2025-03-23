@@ -1,9 +1,6 @@
 {
-    "release-type": "node",
     "bump-minor-pre-major": true,
     "bump-patch-for-minor-pre-major": true,
-    "draft": false,
-    "prerelease": false,
     "include-component-in-tag": false,
     "include-v-in-tag": true,
     "changelog-sections": [
@@ -20,7 +17,6 @@
         { "type": "build", "section": "Build System" },
         { "type": "ci", "section": "Continuous Integration" }
     ],
-    "initial-version": "1.0.0",
     "packages": {
         "packages/backend": {
             "release-type": "node",
@@ -38,7 +34,5 @@
             "components": ["backend", "frontend"]
         }
     ],
-    "separate-pull-requests": false,
-    "always-link-local": true,
     "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json"
 }
