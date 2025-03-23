@@ -100,6 +100,13 @@ If no port is specified, the default port 8080 will be used.
 - `/bin`: Helper scripts for building and running the application
 - `/nginx.*.conf`: Nginx configuration files for development and production
 
+## Attributions
+
+This project uses the Twitter Emoji (Twemoji) for its favicon:
+- Copyright 2020 Twitter, Inc and other contributors
+- Graphics licensed under CC-BY 4.0: https://creativecommons.org/licenses/by/4.0/
+- See [ATTRIBUTION.md](./ATTRIBUTION.md) for more details
+
 ## License
 
 MIT
