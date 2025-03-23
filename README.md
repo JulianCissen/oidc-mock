@@ -81,6 +81,46 @@ docker run -p 8080:8080 \
     oidc-mock:1.0.0
 ```
 
+#### Server Configuration Format
+
+The server configuration file should be a JSON file with the following structure:
+
+```json
+{
+  "provider": {
+    "iss": "http://localhost:8080"
+  },
+  "clients": [
+    {
+      "client_id": "my-client",
+      "client_secret": "my-secret",
+      "redirect_uris": ["https://my-app.example.com/callback"],
+      "post_logout_redirect_uris": ["https://my-app.example.com"]
+    }
+  ],
+  "cookies": {
+    "keys": ["optional-cookie-encryption-key"]
+  }
+}
+```
+
+- `provider.iss`: The issuer URL of your OIDC provider
+- `clients`: An array of client configurations
+  - `client_id`: The client identifier
+  - `client_secret`: The client secret
+  - `redirect_uris`: Array of valid redirect URIs after authentication
+  - `post_logout_redirect_uris`: Array of valid redirect URIs after logout
+- `cookies.keys`: Optional encryption keys for cookies (will be auto-generated if not provided)
+
+You can use environment variables in your configuration file using `${VARIABLE_NAME}` syntax. For example:
+```json
+{
+  "provider": {
+    "iss": "http://${DOMAIN}:${PORT}"
+  }
+}
+```
+
 ### Custom Port Configuration
 
 You can specify a custom port for the Nginx server by setting the `PORT` environment variable:
