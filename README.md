@@ -107,6 +107,10 @@ This project uses the Twitter Emoji (Twemoji) for its favicon:
 - Graphics licensed under CC-BY 4.0: https://creativecommons.org/licenses/by/4.0/
 - See [ATTRIBUTION.md](./ATTRIBUTION.md) for more details
 
+## AI Assistance Disclaimer
+
+This project was created with assistance from artificial intelligence tools, specifically GitHub Copilot. The AI tools helped with code generation, documentation, and project structure.
+
 ## License
 
 MIT
