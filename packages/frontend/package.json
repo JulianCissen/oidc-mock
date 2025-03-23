@@ -1,6 +1,6 @@
 {
     "name": "oidc-mock-frontend",
-    "version": "0.1.0",
+    "version": "1.0.0",
     "productName": "oidc-mock",
     "author": "Julian Cissen",
     "license": "MIT",
@@ -13,7 +13,7 @@
     },
     "dependencies": {
         "@quasar/extras": "1.16.15",
-        "axios": "1.7.9",
+        "axios": "1.8.4",
         "oidc-client-ts": "3.1.0",
         "pinia": "2.3.0",
         "quasar": "2.17.5",
