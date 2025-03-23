@@ -49,63 +49,68 @@ export abstract class Controller {
             next: RequestHandler,
         ) => Promise<TResult> | TResult;
     }) {
-        this.router[method](
-            route,
-            async (req, _, next) => {
+        // Validation middleware
+        const validationMiddleware: RequestHandler<
+            TParams extends z.ZodType ? z.infer<TParams> : unknown,
+            TResult,
+            TBody extends z.ZodType ? z.infer<TBody> : unknown,
+            TQuery extends z.ZodType ? z.infer<TQuery> : unknown
+        > = async (req, _, next) => {
+            try {
+                // Validate params if validator exists
                 if (validators?.params) {
-                    const res = validators.params.safeParse(req.params);
-                    if (res.success) {
-                        req.params = res.data;
-                    } else {
-                        next(res.error);
-                    }
+                    const result = validators.params.safeParse(req.params);
+                    if (!result.success) return next(result.error);
+                    req.params = result.data;
                 }
 
+                // Validate body if validator exists
                 if (validators?.body) {
-                    const res = validators.body.safeParse(req.body);
-                    if (res.success) {
-                        req.body = res.data;
-                    } else {
-                        next(res.error);
-                    }
+                    const result = validators.body.safeParse(req.body);
+                    if (!result.success) return next(result.error);
+                    req.body = result.data;
                 }
 
+                // Validate query if validator exists
                 if (validators?.query) {
-                    const res = validators.query.safeParse(req.query);
-                    if (res.success) {
-                        req.query = res.data;
-                    } else {
-                        next(res.error);
-                    }
+                    const result = validators.query.safeParse(req.query);
+                    if (!result.success) return next(result.error);
+                    req.query = result.data;
                 }
 
                 next();
-            },
+            } catch (error) {
+                next(error);
+            }
+        };
+
+        // Handler middleware
+        const routeHandler: RequestHandler = (req, res, next) => {
+            Promise.resolve(
+                handler(
+                    req as Request<
+                        TParams extends z.ZodType ? z.infer<TParams> : unknown,
+                        TResult,
+                        TBody extends z.ZodType ? z.infer<TBody> : unknown,
+                        TQuery extends z.ZodType ? z.infer<TQuery> : unknown
+                    >,
+                    res,
+                    next,
+                ),
+            )
+                .then((result) => {
+                    if (!res.headersSent) res.json(result).status(200);
+                    next();
+                })
+                .catch(next);
+        };
+
+        // Register the route with all middlewares
+        this.router[method](
+            route,
+            validationMiddleware,
             ...middlewares,
-            // handler
-            (req, res, next) => {
-                Promise.resolve(
-                    handler(
-                        req as Request<
-                            TParams extends z.ZodType
-                                ? z.infer<TParams>
-                                : unknown,
-                            TResult,
-                            TBody extends z.ZodType ? z.infer<TBody> : unknown,
-                            TQuery extends z.ZodType ? z.infer<TQuery> : unknown
-                        >,
-                        res,
-                        next,
-                    ),
-                )
-                    .then((result) => {
-                        if (!res.headersSent) res.json(result).status(200);
-                        next();
-                    })
-                    .catch((err) => {
-                        next(err);
-                    });
-            },
+            routeHandler,
         );
     }
 
