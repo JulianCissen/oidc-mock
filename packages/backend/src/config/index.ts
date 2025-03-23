@@ -26,7 +26,6 @@ const schema = z.object({
             token_endpoint_auth_method: z
                 .enum(['client_secret_basic'])
                 .default('client_secret_basic'),
-            // Token lifetimes for client with defaults already applied at property level
             tokenLifetimes: tokenLifetimesSchema.default(
                 DEFAULT_TOKEN_LIFETIMES,
             ),
