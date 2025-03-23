@@ -22,10 +22,6 @@
     ],
     "initial-version": "1.0.0",
     "packages": {
-        ".": {
-            "release-type": "node",
-            "component": "root"
-        },
         "packages/backend": {
             "release-type": "node",
             "component": "backend"
@@ -43,7 +39,7 @@
         {
             "type": "linked-versions",
             "groupName": "oidc-mock",
-            "components": ["root", "backend", "frontend"]
+            "components": ["backend", "frontend"]
         }
     ],
     "separate-pull-requests": false,
