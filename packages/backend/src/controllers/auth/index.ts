@@ -1,14 +1,10 @@
 import { Controller } from '../Controller';
 import type { RequestHandler } from 'express';
+import { addMissingDetailsToGrant } from '../../utils/addMissingDetailsToGrant';
 import { claimSets } from '../../config/claims';
+import { getGrant } from '../../utils/getGrant';
 import { oidcProvider } from '../oidc';
 import { z } from 'zod';
-
-const missingDetailsValidator = z.object({
-    missingOIDCScope: z.array(z.string()).optional(),
-    missingOIDCClaims: z.array(z.string()).optional(),
-    missingResourceScopes: z.record(z.array(z.string())).optional(),
-});
 
 const noCacheMiddleware: RequestHandler<unknown, unknown, unknown, unknown> = (
     _,
@@ -78,37 +74,13 @@ class AuthController extends Controller {
                 }
                 const { accountId } = session;
 
-                // Create grant or use existing one
-                let grant;
-                if (existingGrantId) {
-                    grant = await oidcProvider.Grant.find(existingGrantId);
-                }
-                // Create new grant if none exists
-                if (!grant) {
-                    grant = new oidcProvider.Grant({
-                        accountId,
-                        clientId: String(params['client_id']),
-                    });
-                }
-
-                const parsedDetails = missingDetailsValidator.parse(details);
-
-                // Add missing scopes and claims
-                if (parsedDetails.missingOIDCScope?.length)
-                    grant.addOIDCScope(
-                        parsedDetails.missingOIDCScope.join(' '),
-                    );
-                if (parsedDetails.missingOIDCClaims?.length)
-                    grant.addOIDCClaims(parsedDetails.missingOIDCClaims);
-
-                // Add resource scopes if present
-                if (parsedDetails.missingResourceScopes) {
-                    Object.entries(parsedDetails.missingResourceScopes).forEach(
-                        ([indicator, scopes]) => {
-                            grant.addResourceScope(indicator, scopes.join(' '));
-                        },
-                    );
-                }
+                let grant = await getGrant(
+                    oidcProvider,
+                    existingGrantId,
+                    accountId,
+                    params,
+                );
+                grant = addMissingDetailsToGrant(details, grant);
 
                 const grantId = await grant.save();
                 const consent = !existingGrantId ? { grantId } : {};
