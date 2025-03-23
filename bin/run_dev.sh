@@ -11,7 +11,7 @@ PORT=${1:-8080}
 
 # Build the Docker image to incorporate any changes (explicit rebuild)
 echo "Building Docker development image..."
-docker build --target development -t oidc-mock .
+docker build --target development -t oidc-mock:development .
 
 # Run frontend and backend in the same terminal using background jobs
 echo "Starting frontend and backend development servers..."
