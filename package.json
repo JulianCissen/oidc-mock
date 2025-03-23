@@ -4,7 +4,13 @@
     "productName": "oidc-mock",
     "author": "Julian Cissen",
     "license": "MIT",
-    "scripts": {},
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/JulianCissen/oidc-mock.git"
+    },
+    "scripts": {
+        "build": "npm run --prefix packages/backend build && npm run --prefix packages/frontend build"
+    },
     "devDependencies": {
         "@types/eslint": "^9.6.1",
         "@types/node": "^22.10.2",
@@ -18,5 +24,8 @@
         "typescript": "^5.7.2",
         "typescript-eslint": "^8.18.2",
         "cross-env": "^7.0.3"
-    }
+    },
+    "workspaces": [
+        "packages/*"
+    ]
 }
