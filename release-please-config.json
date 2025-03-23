@@ -36,7 +36,6 @@
         }
     },
     "plugins": [
-        "node-workspace",
         {
             "type": "linked-versions",
             "groupName": "oidc-mock",
