@@ -1,43 +1,40 @@
-# Custom Claims Configuration
+# OIDC Mock Provider - Backend
 
-You can provide a custom claims file during runtime by mounting it to the container and setting the `CUSTOM_CLAIMS_PATH` environment variable.
+This package contains the Express.js implementation of the OIDC provider using [oidc-provider](https://github.com/panva/node-oidc-provider).
 
-Example:
-```bash
-docker run -p 8080:8080 \
-    -v /path/to/custom_claims.json:/app/backend/config/custom_claims.json \
-    -e CUSTOM_CLAIMS_PATH=/app/backend/config/custom_claims.json \
-    oidc-mock:1.0.0
-```
-
-If no custom claims file is provided:
-- In **production**, the default claims file is located at `/app/backend/defaults/claims.json`.
-- In **development**, the `./src/config/claims.json` file will be used as a fallback if `CUSTOM_CLAIMS_PATH` is not defined.
-
-# Custom Server Configuration
-
-You can provide a custom server configuration file during runtime by mounting it to the container and setting the `CUSTOM_SERVER_CONFIG_PATH` environment variable.
-
-Example:
-```bash
-docker run -p 8080:8080 \
-    -v /path/to/custom_server_config.json:/app/backend/config/custom_server_config.json \
-    -e CUSTOM_SERVER_CONFIG_PATH=/app/backend/config/custom_server_config.json \
-    oidc-mock:1.0.0
-```
-
-If no custom server configuration file is provided:
-- In **production**, the default server configuration file is located at `/app/backend/defaults/development.json`.
-- In **development**, the `./src/config/development.json` file will be used as a fallback if `CUSTOM_SERVER_CONFIG_PATH` is not defined.
-
-# Custom Port Configuration
-
-You can specify a custom port for the Nginx server by setting the `PORT` environment variable:
+## Development
 
 ```bash
-docker run -p 9000:9000 \
-    -e PORT=9000 \
-    oidc-mock:1.0.0
+# Install dependencies
+npm install
+
+# Start the development server
+npm run dev
 ```
 
-If no port is specified, the default port 8080 will be used.
+The backend server will start on port 3000 by default, or the port specified in the `PORT` environment variable.
+
+## API Routes
+
+### OIDC Endpoints
+
+All standard OIDC endpoints are available at `/oidc/`:
+
+- `GET /oidc/.well-known/openid-configuration` - OIDC discovery endpoint
+- `GET /oidc/auth` - Authorization endpoint
+- `POST /oidc/token` - Token endpoint
+- `GET /oidc/userinfo` - User info endpoint
+- `GET /oidc/jwks` - JSON Web Key Set endpoint
+
+### Authentication Endpoints
+
+Custom authentication endpoints:
+
+- `GET /auth/claims` - Get available claim sets
+- `POST /auth/select-claims?claims_index=X` - Select a claim set for authentication
+- `POST /auth/consent` - Grant consent for the requested scopes
+- `GET /auth/abort` - Abort the authentication process
+
+## Configuration
+
+For configuration options, please see the main README.md file in the project root.
