@@ -24,16 +24,6 @@
         {"type": "ci", "section": "Continuous Integration"}
       ],
       "initial-version": "1.0.0"
-    },
-    "packages/backend": {
-      "release-type": "node",
-      "package-name": "oidc-mock-backend",
-      "initial-version": "1.0.0"
-    },
-    "packages/frontend": {
-      "release-type": "node",
-      "package-name": "oidc-mock-frontend",
-      "initial-version": "1.0.0"
     }
   },
   "plugins": ["node-workspace", "linked-versions"],
