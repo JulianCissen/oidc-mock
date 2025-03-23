@@ -24,7 +24,7 @@ BACKEND_PID=$!
 
 # Run the container with the newly built image
 echo "Starting development container on port $PORT..."
-docker run --name oidc-mock-dev -p $PORT:$PORT -e PORT=$PORT oidc-mock &
+docker run --name oidc-mock-dev -p $PORT:$PORT -e PORT=$PORT oidc-mock:development &
 DOCKER_PID=$!
 
 # Handle cleanup on script exit (Ctrl+C)
