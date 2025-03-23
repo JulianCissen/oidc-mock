@@ -12,29 +12,29 @@ import { errors } from 'oidc-provider';
 
 const app = express();
 
-// Configure middleware
+// Configure middleware.
 app.use(express.json());
 app.use(cookieParser(config.cookies.keys));
 app.use(httpLogger);
 
-// Set up routes
+// Set up routes.
 app.use('/oidc', oidcProvider.callback());
 app.use('/auth', authController.getRoutes());
 
-// Generic error handler
+// Generic error handler.
 const errorHandler = (
     err: unknown,
     _: Request,
     res: Response,
     next: NextFunction,
 ) => {
-    // If headers have already been sent, delegate to the default error handler
+    // If headers have already been sent, delegate to the default error handler.
     if (res.headersSent) {
         next(err);
         return;
     }
 
-    // Handle oidc-provider errors
+    // Handle oidc-provider errors.
     if (err instanceof errors.OIDCProviderError) {
         res.status(err.statusCode).json({
             error: err.error,
@@ -43,14 +43,14 @@ const errorHandler = (
         return;
     }
 
-    // Handle generic errors
+    // Handle generic errors.
     logger.error(err);
     res.status(500).send('Internal server error');
 };
 
 app.use(errorHandler);
 
-// Display startup information
+// Display startup information.
 const displayStartupInfo = () => {
     const issUrl = new URL(config.provider.iss);
     logger.info(`Server is running on ${issUrl.href}`);
@@ -59,5 +59,5 @@ const displayStartupInfo = () => {
     );
 };
 
-// Start server
+// Start server.
 app.listen(3000, displayStartupInfo);

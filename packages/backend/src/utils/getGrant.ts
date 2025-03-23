@@ -17,13 +17,13 @@ export const getGrant = async (
 ): Promise<Grant> => {
     let grant: Grant | undefined;
 
-    // Create grant or use existing one
+    // Create grant or use existing one.
     if (existingGrantId) {
         const foundGrant = await oidcProvider.Grant.find(existingGrantId);
         if (foundGrant) grant = foundGrant;
     }
 
-    // Create new grant if none exists
+    // Create new grant if none exists.
     if (!grant) {
         grant = new oidcProvider.Grant({
             accountId,

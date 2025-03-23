@@ -10,7 +10,7 @@ export const generateJWKS = async () => {
     const privateKey = await exportJWK(keyPair.privateKey);
     const publicKey = await exportJWK(keyPair.publicKey);
 
-    // generate kid
+    // Generate a key id.
     const kid = crypto.randomBytes(16).toString('hex');
     publicKey.kid = kid;
     publicKey.alg = 'RS256';

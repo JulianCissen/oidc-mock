@@ -6,7 +6,7 @@ import Provider, {
 import { claimSets } from '../../config/claims';
 import { config } from '../../config';
 
-// Account finder function
+// Account finder function.
 const findAccount: FindAccount = (_, id) => {
     const idNumber = parseInt(id, 10);
     const claims = claimSets[idNumber];
@@ -17,7 +17,7 @@ const findAccount: FindAccount = (_, id) => {
     };
 };
 
-// Logout source HTML template
+// Logout source HTML template.
 const logoutSource = (ctx: KoaContextWithOIDC, form: string) => {
     ctx.body = `<!DOCTYPE html>
                 <html>
@@ -35,14 +35,14 @@ const logoutSource = (ctx: KoaContextWithOIDC, form: string) => {
                 </html>`;
 };
 
-// Custom interaction routes
+// Custom interaction routes.
 const interactionRoutes = (_: KoaContextWithOIDC, interaction: Interaction) => {
     if (interaction.prompt.name === 'login') return '/login';
     if (interaction.prompt.name === 'consent') return '/consent';
     return '/';
 };
 
-// Provider configuration
+// Provider configuration.
 const providerConfig = {
     clients: config.clients,
     findAccount,
@@ -75,7 +75,7 @@ const providerConfig = {
     },
 };
 
-// Initialize provider
+// Initialize provider.
 const oidcProvider = new Provider(config.provider.iss, providerConfig);
 oidcProvider.proxy = true;
 

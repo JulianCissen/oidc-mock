@@ -7,8 +7,8 @@ export const replaceEnvVars = (jsonString: string): string => {
     return jsonString.replace(/\$\{([^}]+)\}/g, (match, envVarName) => {
         const envValue = process.env[envVarName];
         if (envValue === undefined) {
-            console.warn(`Environment variable ${envVarName} not found`);
-            return match; // Return the original match if env var doesn't exist
+            console.warn(`Environment variable ${envVarName} not found.`);
+            return match; // Return the original match if env var doesn't exist.
         }
         return envValue;
     });
