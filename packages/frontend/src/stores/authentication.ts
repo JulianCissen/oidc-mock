@@ -15,6 +15,7 @@ export const useAuthenticationStore = defineStore('authentication', {
         setUserClaims(claims: Record<string, unknown>) {
             this.claims = claims;
         },
+
         async checkUserSession() {
             try {
                 const user = await userManager.getUser();
@@ -25,6 +26,7 @@ export const useAuthenticationStore = defineStore('authentication', {
                 console.error('Error checking user session:', err);
             }
         },
+
         async logout() {
             this.claims = {};
             await userManager.signoutRedirect();
