@@ -2,6 +2,7 @@ import { authController, oidcProvider } from './controllers';
 import express, {
     type NextFunction,
     type Request,
+    type RequestHandler,
     type Response,
 } from 'express';
 import { httpLogger, logger } from './utils/logger';
@@ -14,7 +15,7 @@ const app = express();
 
 // Configure middleware.
 app.use(express.json());
-app.use(cookieParser(config.cookies.keys));
+app.use(cookieParser(config.cookies.keys) as unknown as RequestHandler); // Somehow the typing provided by cookie-parser is incorrect.
 app.use(httpLogger);
 
 // Set up routes.
