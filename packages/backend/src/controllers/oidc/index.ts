@@ -50,7 +50,7 @@ const providerConfig = {
     features: {
         devInteractions: { enabled: false },
         introspection: { enabled: true },
-        jwtIntrospection: { enabled: true, ack: 'draft-10' },
+        jwtIntrospection: { enabled: true },
         rpInitiatedLogout: {
             enabled: true,
             logoutSource,

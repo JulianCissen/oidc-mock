@@ -13,7 +13,7 @@
         "cookie-parser": "1.4.7",
         "express": "4.21.2",
         "jose": "5.9.6",
-        "oidc-provider": "8.6.0",
+        "oidc-provider": "8.8.1",
         "pino": "9.6.0",
         "pino-http": "10.3.0",
         "pino-pretty": "13.0.0",
@@ -22,7 +22,7 @@
     "devDependencies": {
         "@types/cookie-parser": "^1.4.8",
         "@types/express": "^5.0.0",
-        "@types/oidc-provider": "^8.5.2",
+        "@types/oidc-provider": "8.8.1",
         "tsx": "^4.19.2"
     }
 }
