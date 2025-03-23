@@ -20,9 +20,11 @@ export const useErrorStore = defineStore('error', {
         setNotFound() {
             this.type = ErrorTypes.NOT_FOUND;
         },
+
         setGenericError() {
             this.type = ErrorTypes.GENERIC;
         },
+
         clearError() {
             this.type = ErrorTypes.NONE;
         },
