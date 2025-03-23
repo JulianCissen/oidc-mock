@@ -1,40 +1,38 @@
-# oidc-mock (oidc-mock-frontend)
+# OIDC Mock Provider - Frontend
 
-A Quasar Project
+This package contains the Vue.js/Quasar user interface for the OIDC Mock Provider.
 
-## Install the dependencies
+## Development
+
 ```bash
-yarn
-# or
+# Install dependencies
 npm install
+
+# Start the development server
+npm run dev
 ```
 
-### Start the app in development mode (hot-code reloading, error reporting, etc.)
+The development server will start on port 9000.
+
+## Features
+
+- User interface for selecting claim sets during login
+- Consent screen for authorization
+- Internal OIDC client for testing
+- Dark mode support
+
+## Pages
+
+- `/` - Landing page with login button
+- `/login` - Claims selection page
+- `/consent` - Consent page
+- `/callback` - Internal client callback page
+
+## Building
+
 ```bash
-quasar dev
+# Build for production
+npm run build
 ```
 
-
-### Lint the files
-```bash
-yarn lint
-# or
-npm run lint
-```
-
-
-### Format the files
-```bash
-yarn format
-# or
-npm run format
-```
-
-
-### Build the app for production
-```bash
-quasar build
-```
-
-### Customize the configuration
-See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-vite/quasar-config-js).
+The build output will be in the `dist/spa` directory.
