@@ -49,7 +49,7 @@ export abstract class Controller {
             next: RequestHandler,
         ) => Promise<TResult> | TResult;
     }) {
-        // Validation middleware
+        // Validation middleware.
         const validationMiddleware: RequestHandler<
             TParams extends z.ZodType ? z.infer<TParams> : unknown,
             TResult,
@@ -57,21 +57,21 @@ export abstract class Controller {
             TQuery extends z.ZodType ? z.infer<TQuery> : unknown
         > = async (req, _, next) => {
             try {
-                // Validate params if validator exists
+                // Validate params if validator exists.
                 if (validators?.params) {
                     const result = validators.params.safeParse(req.params);
                     if (!result.success) return next(result.error);
                     req.params = result.data;
                 }
 
-                // Validate body if validator exists
+                // Validate body if validator exists.
                 if (validators?.body) {
                     const result = validators.body.safeParse(req.body);
                     if (!result.success) return next(result.error);
                     req.body = result.data;
                 }
 
-                // Validate query if validator exists
+                // Validate query if validator exists.
                 if (validators?.query) {
                     const result = validators.query.safeParse(req.query);
                     if (!result.success) return next(result.error);
@@ -84,7 +84,7 @@ export abstract class Controller {
             }
         };
 
-        // Handler middleware
+        // Handler middleware.
         const routeHandler: RequestHandler = (req, res, next) => {
             Promise.resolve(
                 handler(
@@ -105,7 +105,7 @@ export abstract class Controller {
                 .catch(next);
         };
 
-        // Register the route with all middlewares
+        // Register the route with all middlewares.
         this.router[method](
             route,
             validationMiddleware,

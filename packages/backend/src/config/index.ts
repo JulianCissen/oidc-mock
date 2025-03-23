@@ -41,6 +41,6 @@ const configFilePath = getFileRefFromEnv(
 );
 
 const file = readFileSync(configFilePath, 'utf-8');
-// Process environment variables before parsing JSON
+// Process environment variables before parsing JSON.
 const processedFile = replaceEnvVars(file);
 export const config = schema.parse(JSON.parse(processedFile));

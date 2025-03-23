@@ -19,13 +19,13 @@ export const addMissingDetailsToGrant = (
 ): Grant => {
     const parsedDetails = missingDetailsValidator.parse(details);
 
-    // Add missing scopes and claims
+    // Add missing scopes and claims.
     if (parsedDetails.missingOIDCScope?.length)
         grant.addOIDCScope(parsedDetails.missingOIDCScope.join(' '));
     if (parsedDetails.missingOIDCClaims?.length)
         grant.addOIDCClaims(parsedDetails.missingOIDCClaims);
 
-    // Add resource scopes if present
+    // Add resource scopes if present.
     if (parsedDetails.missingResourceScopes) {
         Object.entries(parsedDetails.missingResourceScopes).forEach(
             ([indicator, scopes]) => {

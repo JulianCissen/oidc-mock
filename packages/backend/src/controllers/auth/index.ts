@@ -68,7 +68,7 @@ class AuthController extends Controller {
                 if (name !== 'consent') {
                     throw new Error('Expected consent prompt');
                 }
-                // Ensure session exists and get accountId
+                // Ensure session exists and get accountId.
                 if (!session) {
                     throw new Error('No session found');
                 }
