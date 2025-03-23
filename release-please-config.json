@@ -8,7 +8,7 @@
       "draft": false,
       "prerelease": false,
       "include-component-in-tag": false,
-      "include-v-in-tag": false,
+      "include-v-in-tag": true,
       "changelog-sections": [
         {"type": "feat", "section": "Features"},
         {"type": "fix", "section": "Bug Fixes"},
@@ -22,17 +22,20 @@
         {"type": "test", "section": "Tests"},
         {"type": "build", "section": "Build System"},
         {"type": "ci", "section": "Continuous Integration"}
-      ]
+      ],
+      "initial-version": "1.0.0"
     },
     "packages/backend": {
       "release-type": "node",
       "package-name": "oidc-mock-backend",
-      "component": "backend"
+      "component": "backend",
+      "initial-version": "1.0.0"
     },
     "packages/frontend": {
       "release-type": "node",
       "package-name": "oidc-mock-frontend",
-      "component": "frontend"
+      "component": "frontend",
+      "initial-version": "1.0.0"
     }
   },
   "plugins": ["node-workspace", "linked-versions"],
