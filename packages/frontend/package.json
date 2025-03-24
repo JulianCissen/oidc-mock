@@ -1,6 +1,5 @@
 {
     "name": "oidc-mock-frontend",
-    "version": "1.0.0",
     "productName": "oidc-mock",
     "author": "Julian Cissen",
     "license": "MIT",
