@@ -103,7 +103,6 @@ updates:
     directory: "/"
     schedule:
       interval: "monthly"
-      day: "1"
       time: "09:00"
       timezone: "Europe/Amsterdam"
     open-pull-requests-limit: 2
@@ -121,7 +120,6 @@ updates:
     directory: "/"
     schedule:
       interval: "monthly"
-      day: "1"
       time: "09:00"
       timezone: "Europe/Amsterdam"
     open-pull-requests-limit: 2
