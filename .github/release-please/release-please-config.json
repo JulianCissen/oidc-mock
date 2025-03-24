@@ -9,11 +9,13 @@
         },
         "packages/backend": {
             "release-type": "node",
-            "component": "backend"
+            "component": "backend",
+            "changelog-sections": []
         },
         "packages/frontend": {
             "release-type": "node",
-            "component": "frontend"
+            "component": "frontend",
+            "changelog-sections": []
         }
     },
     "plugins": [
