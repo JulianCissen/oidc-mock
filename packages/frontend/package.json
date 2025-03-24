@@ -8,7 +8,10 @@
     "scripts": {
         "dev": "quasar dev",
         "build": "quasar build",
-        "postinstall": "quasar prepare"
+        "postinstall": "quasar prepare",
+        "test": "playwright test",
+        "test:ui": "playwright test --ui",
+        "test:debug": "playwright test --debug"
     },
     "dependencies": {
         "@quasar/extras": "1.16.17",
@@ -20,6 +23,7 @@
         "vue-router": "4.5.0"
     },
     "devDependencies": {
+        "@playwright/test": "^1.46.0",
         "@quasar/app-vite": "^2.0.0",
         "autoprefixer": "^10.4.2",
         "vite-plugin-checker": "^0.8.0",
