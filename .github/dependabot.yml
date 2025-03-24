@@ -1,9 +1,10 @@
 # Dependabot configuration file
 # See: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+# This project uses a monorepo structure with a consolidated configuration for all package.json files
 
 version: 2
 updates:
-  # Maintain dependencies for npm packages (root)
+  # Consolidated configuration for all npm packages (root, backend, frontend)
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
@@ -11,32 +12,25 @@ updates:
       day: "monday"
       time: "09:00"
       timezone: "Europe/Amsterdam"
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 10
     allow:
       - dependency-type: "production"
-    versioning-strategy: auto
-    labels:
-      - "dependencies"
-      - "npm"
-    commit-message:
-      prefix: "chore"
-
-  # Maintain dependencies for backend npm packages
-  - package-ecosystem: "npm"
-    directory: "/packages/backend"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "09:00"
-      timezone: "Europe/Amsterdam"
-    open-pull-requests-limit: 3
-    allow:
-      - dependency-type: "direct"
+      - dependency-name: "@types/*"
     versioning-strategy: auto
     ignore:
       - dependency-name: "express"
         versions:
           - ">=5.0.0"
+      - dependency-name: "@types/express"
+        versions:
+          - ">=5.0.0"
+      - dependency-name: "quasar"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "vue"
+        update-types: ["version-update:semver-major"]
+      # Ignore updates for @types packages in root package.json
+      - dependency-name: "@types/eslint"
+      - dependency-name: "@types/node"
     groups:
       express-types:
         patterns:
@@ -50,32 +44,6 @@ updates:
         patterns:
           - "oidc-provider"
           - "@types/oidc-provider"
-    labels:
-      - "dependencies"
-      - "npm"
-      - "backend"
-    commit-message:
-      prefix: "chore"
-
-  # Maintain dependencies for frontend npm packages
-  - package-ecosystem: "npm"
-    directory: "/packages/frontend"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "09:00"
-      timezone: "Europe/Amsterdam"
-    open-pull-requests-limit: 3
-    allow:
-      - dependency-type: "direct"
-    versioning-strategy: auto
-    rebase-strategy: "auto"
-    ignore:
-      - dependency-name: "quasar"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "vue"
-        update-types: ["version-update:semver-major"]
-    groups:
       quasar-packages:
         patterns:
           - "quasar"
@@ -94,7 +62,6 @@ updates:
     labels:
       - "dependencies"
       - "npm"
-      - "frontend"
     commit-message:
       prefix: "chore"
 
