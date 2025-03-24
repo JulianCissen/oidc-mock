@@ -16,7 +16,6 @@ import { computed } from 'vue';
 type Props = {
     value: number;
 };
-
 const props = defineProps<Props>();
 
 /**

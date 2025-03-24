@@ -11,7 +11,6 @@ type Props = {
     name: string;
     value: unknown;
 };
-
 const props = defineProps<Props>();
 
 /**
