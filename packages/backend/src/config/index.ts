@@ -1,3 +1,7 @@
+import {
+    DEFAULT_TOKEN_LIFETIMES,
+    tokenLifetimesSchema,
+} from '../utils/ttlConfig';
 import crypto from 'crypto';
 import { getFileRefFromEnv } from '../utils/getFileRefFromEnv';
 import { readFileSync } from 'fs';
@@ -7,20 +11,23 @@ import { z } from 'zod';
 const schema = z.object({
     provider: z.object({
         iss: z.string(),
+        tokenLifetimes: tokenLifetimesSchema.default(DEFAULT_TOKEN_LIFETIMES),
     }),
     clients: z.array(
         z.object({
             client_id: z.string(),
             client_secret: z.string(),
+            application_type: z.enum(['web', 'native']).default('web'),
             redirect_uris: z.array(z.string()),
             post_logout_redirect_uris: z.array(z.string()),
             grant_types: z
-                .array(z.enum(['authorization_code']))
-                .default(['authorization_code']),
+                .array(z.enum(['authorization_code', 'refresh_token']))
+                .default(['authorization_code', 'refresh_token']),
             response_types: z.array(z.enum(['code'])).default(['code']),
             token_endpoint_auth_method: z
                 .enum(['client_secret_basic'])
                 .default('client_secret_basic'),
+            tokenLifetimes: tokenLifetimesSchema.partial().default({}),
         }),
     ),
     cookies: z

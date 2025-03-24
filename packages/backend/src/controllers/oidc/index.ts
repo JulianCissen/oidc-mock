@@ -1,10 +1,12 @@
 import Provider, {
+    type Configuration,
     type FindAccount,
     type Interaction,
     type KoaContextWithOIDC,
 } from 'oidc-provider';
 import { claimSets } from '../../config/claims';
 import { config } from '../../config';
+import { ttlConfig } from '../../utils/ttlConfig';
 
 // Account finder function.
 const findAccount: FindAccount = (_, id) => {
@@ -43,7 +45,7 @@ const interactionRoutes = (_: KoaContextWithOIDC, interaction: Interaction) => {
 };
 
 // Provider configuration.
-const providerConfig = {
+const providerConfig: Configuration = {
     clients: config.clients,
     findAccount,
 
@@ -73,6 +75,9 @@ const providerConfig = {
         // Don't require PKCE since it's a mock server that doesn't serve secure content.
         required: () => false,
     },
+
+    // Use the comprehensive TTL configuration with all token types
+    ttl: ttlConfig,
 };
 
 // Initialize provider.
