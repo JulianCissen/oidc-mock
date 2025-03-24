@@ -3,6 +3,10 @@
     "bump-patch-for-minor-pre-major": true,
     "include-v-in-tag": true,
     "packages": {
+        ".": {
+            "release-type": "node",
+            "component": "root"
+        },
         "packages/backend": {
             "release-type": "node",
             "component": "backend"
@@ -16,7 +20,7 @@
         {
             "type": "linked-versions",
             "groupName": "oidc-mock",
-            "components": ["backend", "frontend"]
+            "components": ["root", "backend", "frontend"]
         }
     ],
     "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json"
