@@ -20,7 +20,7 @@
     },
     "devDependencies": {
         "@types/cookie-parser": "1.4.8",
-        "@types/express": "4.17.21",
+        "@types/express": "5.0.1",
         "@types/oidc-provider": "8.8.1",
         "tsx": "^4.19.2"
     }
