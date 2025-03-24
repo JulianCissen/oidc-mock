@@ -2,6 +2,8 @@
     "bump-minor-pre-major": true,
     "bump-patch-for-minor-pre-major": true,
     "include-v-in-tag": true,
+    "changelog-path": "CHANGELOG.md",
+    "changelog-type": "default",
     "packages": {
         ".": {
             "release-type": "node",
@@ -10,12 +12,12 @@
         "packages/backend": {
             "release-type": "node",
             "component": "backend",
-            "changelog-sections": []
+            "changelog-path": ""
         },
         "packages/frontend": {
             "release-type": "node",
             "component": "frontend",
-            "changelog-sections": []
+            "changelog-path": ""
         }
     },
     "plugins": [
