@@ -36,3 +36,32 @@ npm run build
 ```
 
 The build output will be in the `dist/spa` directory.
+
+## Testing
+
+This project uses Playwright for end-to-end testing.
+
+The tests will automatically start the complete application stack using the `run_dev.sh` script, which:
+1. Builds and starts the Docker container with Nginx
+2. Starts the frontend development server
+3. Starts the backend development server
+
+```bash
+# Install Playwright browsers
+npx playwright install
+
+# Run tests (will use bin/run_dev.sh)
+npm run test
+
+# Run tests with UI
+npm run test:ui
+
+# Debug tests
+npm run test:debug
+```
+
+### Requirements for Testing
+
+- Docker installed and running
+- Bash environment (Git Bash on Windows)
+- All dependencies installed for backend and frontend
