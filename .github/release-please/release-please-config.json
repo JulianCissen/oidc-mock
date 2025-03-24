@@ -1,31 +1,8 @@
 {
-    "bump-minor-pre-major": true,
-    "bump-patch-for-minor-pre-major": true,
-    "include-v-in-tag": true,
-    "changelog-path": "CHANGELOG.md",
-    "changelog-type": "default",
     "packages": {
         ".": {
-            "release-type": "node",
-            "component": "root"
-        },
-        "packages/backend": {
-            "release-type": "node",
-            "component": "backend",
-            "changelog-path": ""
-        },
-        "packages/frontend": {
-            "release-type": "node",
-            "component": "frontend",
-            "changelog-path": ""
+            "release-type": "node"
         }
     },
-    "plugins": [
-        {
-            "type": "linked-versions",
-            "groupName": "oidc-mock",
-            "components": ["root", "backend", "frontend"]
-        }
-    ],
     "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json"
 }
