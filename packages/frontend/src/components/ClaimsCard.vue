@@ -14,7 +14,10 @@
                             claimKey
                         }}</q-item-label>
                         <q-item-label caption class="claim-value">
-                            {{ JSON.stringify(claimValue, null, 2) }}
+                            <display-value
+                                :name="claimKey"
+                                :value="claimValue"
+                            />
                         </q-item-label>
                     </q-item-section>
                 </q-item>
@@ -27,6 +30,7 @@
 </template>
 
 <script setup lang="ts">
+import DisplayValue from './DisplayValue.vue';
 import FilledButton from './FilledButton.vue';
 
 type Props = {

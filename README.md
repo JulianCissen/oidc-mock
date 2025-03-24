@@ -13,6 +13,7 @@ This project consists of:
 - Complete OIDC authentication flow with authorization code grant
 - Customizable user claims
 - Customizable server configuration
+- Configurable token lifetimes
 - Dark mode support
 - Docker containerization for easy deployment
 
@@ -88,14 +89,34 @@ The server configuration file should be a JSON file with the following structure
 ```json
 {
   "provider": {
-    "iss": "http://localhost:8080"
+    "iss": "http://localhost:8080",
+    "tokenLifetimes": {
+      "accessToken": 3600,
+      "authorizationCode": 60,
+      "backchannelAuthenticationRequest": 600,
+      "clientCredentials": 600,
+      "deviceCode": 600,
+      "grant": 1209600,
+      "idToken": 3600,
+      "interaction": 3600,
+      "refreshToken": 604800,
+      "session": 86400
+    }
   },
   "clients": [
     {
       "client_id": "my-client",
       "client_secret": "my-secret",
+      "application_type": "web",
       "redirect_uris": ["https://my-app.example.com/callback"],
-      "post_logout_redirect_uris": ["https://my-app.example.com"]
+      "post_logout_redirect_uris": ["https://my-app.example.com"],
+      "grant_types": ["authorization_code", "refresh_token"],
+      "response_types": ["code"],
+      "token_endpoint_auth_method": "client_secret_basic",
+      "tokenLifetimes": {
+        "accessToken": 7200,
+        "authorizationCode": 600
+      }
     }
   ],
   "cookies": {
@@ -104,13 +125,40 @@ The server configuration file should be a JSON file with the following structure
 }
 ```
 
-- `provider.iss`: The issuer URL of your OIDC provider
+- `provider`: Configuration settings for the OIDC provider
+  - `iss`: The issuer URL of your OIDC provider (required)
+  - `tokenLifetimes`: Global default token lifetimes that apply to all clients
+
 - `clients`: An array of client configurations
-  - `client_id`: The client identifier
-  - `client_secret`: The client secret
-  - `redirect_uris`: Array of valid redirect URIs after authentication
-  - `post_logout_redirect_uris`: Array of valid redirect URIs after logout
-- `cookies.keys`: Optional encryption keys for cookies (will be auto-generated if not provided)
+  - `client_id`: The client identifier (required)
+  - `client_secret`: The client secret (required)
+  - `application_type`: The type of application (optional, defaults to "web")
+    - `web`: Server-side web applications that can maintain client secrets
+    - `native`: Native applications (mobile, desktop) that can't securely store client secrets
+  - `redirect_uris`: Array of valid redirect URIs after authentication (required)
+  - `post_logout_redirect_uris`: Array of valid redirect URIs after logout (required)
+  - `grant_types`: Array of grant types (optional, defaults to ["authorization_code", "refresh_token"])
+  - `response_types`: Array of response types (optional, defaults to ["code"])
+  - `token_endpoint_auth_method`: Authentication method for the token endpoint (optional, defaults to "client_secret_basic")
+  - `tokenLifetimes`: Client-specific token lifetimes - these override the global defaults (all optional)
+
+- `cookies`: Configuration for cookie handling
+  - `keys`: Encryption keys for cookies (optional, auto-generated if not provided)
+
+All token lifetimes are specified in seconds:
+
+| Token Type                    | Default Value | Description                                    |
+|-------------------------------|---------------|------------------------------------------------|
+| `accessToken`                 | 3600          | Access token lifetime (1 hour)                 |
+| `authorizationCode`           | 60            | Authorization code lifetime (1 minute)         |
+| `backchannelAuthenticationRequest` | 600      | Backchannel authentication request (10 minutes)|
+| `clientCredentials`           | 600           | Client credentials token lifetime (10 minutes) |
+| `deviceCode`                  | 600           | Device code lifetime (10 minutes)              |
+| `grant`                       | 1209600       | Grant lifetime (14 days)                       |
+| `idToken`                     | 3600          | ID token lifetime (1 hour)                     |
+| `interaction`                 | 3600          | Interaction lifetime (1 hour)                  |
+| `refreshToken`                | 604800        | Refresh token lifetime (7 days)                |
+| `session`                     | 86400         | Session lifetime (24 hours)                    |
 
 You can use environment variables in your configuration file using `${VARIABLE_NAME}` syntax. For example:
 ```json
