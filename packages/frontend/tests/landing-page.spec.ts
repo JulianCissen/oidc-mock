@@ -1,6 +1,5 @@
-import { expect, test } from '@playwright/test';
 import { LandingPage } from './pages/landing-page';
-import { expectToBeVisible } from './utils/test-helpers';
+import { test } from '@playwright/test';
 
 test.describe('Landing Page', () => {
     let landingPage: LandingPage;
@@ -10,18 +9,18 @@ test.describe('Landing Page', () => {
         await landingPage.goto();
     });
 
-    test('should display the login button', async ({ page }) => {
-        await expectToBeVisible(page, 'button:has-text("Login")');
+    test('should display the login button', async () => {
+        // Verify that the login button is visible on the page.
+        await landingPage.expectLoginButtonToBeVisible();
     });
 
-    test('should display the toolbar title', async ({ page }) => {
-        await expectToBeVisible(
-            page,
-            'div.q-toolbar__title:has-text("OIDC Mock Provider")',
-        );
+    test('should display the toolbar title', async () => {
+        // Verify that the application title is displayed in the toolbar.
+        await landingPage.expectToolbarTitleToBeVisible();
     });
 
-    test('should have dark mode toggle', async ({ page }) => {
-        await expectToBeVisible(page, '.q-toggle');
+    test('should have dark mode toggle', async () => {
+        // Verify that the dark mode toggle is present and visible.
+        await landingPage.expectDarkModeToggleToBeVisible();
     });
 });
