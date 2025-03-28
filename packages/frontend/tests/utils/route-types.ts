@@ -19,7 +19,7 @@ export const Routes = {
 export type AppRoute = (typeof Routes)[keyof typeof Routes];
 
 /**
- * Map of routes to their corresponding page object types
+ * Map of routes to their corresponding page object types.
  */
 export interface RoutePageMap {
     [Routes.HOME]: LandingPage;
@@ -29,6 +29,6 @@ export interface RoutePageMap {
 }
 
 /**
- * Get the page type for a given route
+ * Get the page type for a given route.
  */
 export type PageTypeForRoute<T extends AppRoute> = RoutePageMap[T];
