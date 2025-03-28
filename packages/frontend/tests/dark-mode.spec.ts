@@ -2,31 +2,45 @@ import { expect, test } from '@playwright/test';
 import { LandingPage } from './pages/landing-page';
 
 test.describe('Dark Mode Toggle', () => {
-    test('should toggle dark mode when clicked', async ({ page }) => {
-        const landingPage = new LandingPage(page);
+    let landingPage: LandingPage;
+
+    test.beforeEach(async ({ page }) => {
+        landingPage = new LandingPage(page);
         await landingPage.goto();
+    });
 
-        // Check initial body class (depends on localStorage, but we'll assume light mode by default)
-        const initialIsDark = await page.evaluate(() =>
-            document.body.classList.contains('body--dark'),
+    test('should toggle dark mode when clicked', async () => {
+        // Verify the dark mode toggle exists on the page.
+        await landingPage.expectDarkModeToggleToBeVisible();
+
+        // Check the initial dark mode state before testing.
+        const initialIsDark = await landingPage.isDarkModeEnabled();
+
+        // Toggle dark mode and verify it changed to the opposite state.
+        await landingPage.toggleDarkMode();
+        expect(await landingPage.isDarkModeEnabled()).not.toEqual(
+            initialIsDark,
         );
 
-        // Click toggle
-        await page.locator('.q-toggle').click();
+        // Toggle dark mode back and verify it returned to the initial state.
+        await landingPage.toggleDarkMode();
+        expect(await landingPage.isDarkModeEnabled()).toEqual(initialIsDark);
+    });
 
-        // Check if body class toggled
-        const newIsDark = await page.evaluate(() =>
-            document.body.classList.contains('body--dark'),
-        );
-        expect(newIsDark).not.toEqual(initialIsDark);
+    test('should persist dark mode setting after page refresh', async () => {
+        // Toggle dark mode to change the current state.
+        await landingPage.toggleDarkMode();
 
-        // Toggle back
-        await page.locator('.q-toggle').click();
+        // Verify the localStorage value matches the new dark mode state.
+        const newIsDark = await landingPage.isDarkModeEnabled();
+        const localStorageValue =
+            await landingPage.getLocalStorageValue('darkMode');
+        expect(localStorageValue).toBe(String(newIsDark));
 
-        // Should be back to initial state
-        const finalIsDark = await page.evaluate(() =>
-            document.body.classList.contains('body--dark'),
-        );
-        expect(finalIsDark).toEqual(initialIsDark);
+        // Refresh the page to verify persistence.
+        await landingPage.refresh();
+
+        // Verify dark mode state is maintained after the page refresh.
+        expect(await landingPage.isDarkModeEnabled()).toBe(newIsDark);
     });
 });
