@@ -23,7 +23,7 @@ export class PageFactory {
         page: Page,
         url: T,
     ): Promise<PageTypeForRoute<T>> {
-        // Initialize the appropriate page object based on the URL
+        // Initialize the appropriate page object based on the URL.
         let pageObject;
 
         if (url === Routes.HOME) {
@@ -37,15 +37,13 @@ export class PageFactory {
             await pageObject.expectToBeOnClaimsSelectionPage();
         } else if (url === Routes.CONSENT) {
             pageObject = new ConsentPage(page);
-            // Add expectation for consistency with other pages
             await pageObject.expectToBeOnConsentPage();
         } else {
-            // Default to the landing page for any unknown routes
             pageObject = new LandingPage(page);
             await pageObject.expectToBeOnLandingPage();
         }
 
-        // Cast the page object to the correct type based on the URL
+        // Cast the page object to the correct type based on the URL.
         return pageObject as PageTypeForRoute<T>;
     }
 }
