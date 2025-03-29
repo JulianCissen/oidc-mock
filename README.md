@@ -19,6 +19,30 @@ This project consists of:
 
 ## Quick Start
 
+### Using the Pre-built Container Image
+
+The easiest way to get started is to use the pre-built Docker image from GitHub Container Registry:
+
+```bash
+# Pull the latest image
+docker pull ghcr.io/juliancissen/oidc-mock:latest
+
+# Run the container
+docker run -p 8080:8080 -e PORT=8080 ghcr.io/juliancissen/oidc-mock:latest
+```
+
+You can also use a specific version:
+
+```bash
+# Pull a specific version
+docker pull ghcr.io/juliancissen/oidc-mock:1.0.0
+
+# Run the container with a specific version
+docker run -p 8080:8080 -e PORT=8080 ghcr.io/juliancissen/oidc-mock:1.0.0
+```
+
+The OIDC Mock Provider will now be available at http://localhost:8080.
+
 ### Running in Development Mode
 
 ```bash
