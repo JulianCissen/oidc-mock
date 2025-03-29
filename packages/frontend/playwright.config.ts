@@ -7,9 +7,6 @@ export default defineConfig({
     // Fail the build on CI if you accidentally left test.only in the source code
     forbidOnly: !!process.env.CI,
 
-    // Retry on CI only
-    // retries: process.env.CI ? 2 : 0,
-
     // Stop after the first failure in CI
     maxFailures: process.env.CI ? 1 : 0,
 
@@ -33,10 +30,10 @@ export default defineConfig({
             : 'http://localhost:8080',
 
         // Collect trace when retrying the failed test
-        trace: 'on-first-retry',
+        trace: 'retain-on-first-failure',
 
         // Take screenshots on test failures
-        screenshot: 'only-on-failure',
+        screenshot: 'on-first-failure',
     },
 
     // Configure projects for major browsers
