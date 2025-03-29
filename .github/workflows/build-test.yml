@@ -59,7 +59,7 @@ jobs:
           docker run --rm --network test-network \
             -v $(pwd):/work -w /work/packages/frontend \
             -e CI=true \
-            mcr.microsoft.com/playwright:v1.42.1-jammy \
+            mcr.microsoft.com/playwright:v1.51.1-jammy \
             /bin/bash -c "npm ci && npx playwright test"
       
       - name: Container logs (if tests fail)
