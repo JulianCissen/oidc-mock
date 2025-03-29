@@ -22,9 +22,13 @@ FRONTEND_PID=$!
 (cd packages/backend && npx cross-env PORT=$PORT npm run dev) &
 BACKEND_PID=$!
 
-# Run the container with the newly built image
+# Run the container with the newly built image with explicit host mapping
 echo "Starting development container on port $PORT..."
-docker run --name oidc-mock-dev -p $PORT:$PORT -e PORT=$PORT oidc-mock:development &
+docker run --name oidc-mock-dev \
+  -p $PORT:$PORT \
+  -e PORT=$PORT \
+  --add-host=host.docker.internal:host-gateway \
+  oidc-mock:development &
 DOCKER_PID=$!
 
 # Handle cleanup on script exit (Ctrl+C)
