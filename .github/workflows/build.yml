@@ -1,0 +1,36 @@
+name: Build Docker Image
+
+on:
+  workflow_call:
+    # This workflow is designed to be called by other workflows, not triggered directly
+    # It will output the Docker image as an artifact for use by the caller
+  workflow_dispatch:
+    # Keep manual trigger for debugging purposes
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        id: docker_build
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          target: production
+          tags: oidc-mock:test
+          outputs: type=docker,dest=/tmp/oidc-mock-image.tar
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Upload Docker image artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: oidc-mock-image
+          path: /tmp/oidc-mock-image.tar
+          retention-days: 1
