@@ -1,4 +1,4 @@
-name: Build & Test
+name: Run Tests
 
 on:
   push:
@@ -8,7 +8,6 @@ on:
       - 'package*.json'
       - 'tsconfig*.json'
       - 'Dockerfile'
-      - '.github/workflows/build-test.yml'
   pull_request:
     branches: [ main ]
     paths:
@@ -16,19 +15,29 @@ on:
       - 'package*.json'
       - 'tsconfig*.json'
       - 'Dockerfile'
-      - '.github/workflows/build-test.yml'
+  workflow_dispatch:  # Allow manual triggering
 
 jobs:
-  build-and-test:
+  build:
+    uses: ./.github/workflows/build.yml
+
+  test:
+    needs: build
     runs-on: ubuntu-latest
     
     steps:
       - uses: actions/checkout@v4
 
-      - name: Build Docker image
+      - name: Download Docker image artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: oidc-mock-image
+          path: /tmp
+
+      - name: Load Docker image
         run: |
-          docker build --target production -t oidc-mock:test .
-      
+          docker load --input /tmp/oidc-mock-image.tar
+
       - name: Run production container
         run: |
           docker run -d --name oidc-mock-prod -p 8080:8080 -e PORT=8080 oidc-mock:test
