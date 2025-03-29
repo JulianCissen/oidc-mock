@@ -3,9 +3,18 @@ name: Build Docker Image
 on:
   workflow_call:
     # This workflow is designed to be called by other workflows, not triggered directly
-    # It will output the Docker image as an artifact for use by the caller
+    inputs:
+      tag:
+        description: 'Docker image tag to apply'
+        required: true
+        type: string
   workflow_dispatch:
     # Keep manual trigger for debugging purposes
+    inputs:
+      tag:
+        description: 'Docker image tag to apply'
+        required: true
+        type: string
 
 jobs:
   build:
@@ -23,7 +32,7 @@ jobs:
         with:
           context: .
           target: production
-          tags: oidc-mock:test
+          tags: oidc-mock:${{ inputs.tag }}
           outputs: type=docker,dest=/tmp/oidc-mock-image.tar
           cache-from: type=gha
           cache-to: type=gha,mode=max
