@@ -5,7 +5,7 @@ FROM node:22-alpine AS development
 # Install required packages.
 RUN ["apk", "add", "--no-cache", "nginx", "gettext"]
 # Copy and configure Nginx.
-COPY ./nginx.development.conf /etc/nginx/nginx.conf.template
+COPY ./packages/nginx/development.conf /etc/nginx/nginx.conf.template
 # Configure networking.
 ENV PORT=8080
 EXPOSE ${PORT}
@@ -56,7 +56,7 @@ WORKDIR /app
 # Install runtime dependencies.
 RUN ["apk", "add", "--no-cache", "nginx", "gettext", "dumb-init"]
 # Copy Nginx configuration template.
-COPY ./nginx.production.conf /etc/nginx/nginx.conf.template
+COPY ./packages/nginx/production.conf /etc/nginx/nginx.conf.template
 # Copy frontend build artifacts.
 COPY --from=frontend-build /app/frontend/dist/spa /usr/share/nginx/html
 # Copy backend build artifacts.
