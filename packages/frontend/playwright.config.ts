@@ -10,11 +10,17 @@ export default defineConfig({
     // Retry on CI only
     retries: process.env.CI ? 2 : 0,
 
-    // Reporter to use
-    reporter: [
-        ['list', { printSteps: true }],
-        ['html', { open: 'never', outputFolder: 'playwright-report' }],
-    ],
+    // Reporter to use - add GitHub reporter for CI
+    reporter: process.env.CI
+        ? [
+              ['list', { printSteps: true }],
+              ['html', { outputFolder: 'playwright-report' }],
+              ['github'],
+          ]
+        : [
+              ['list', { printSteps: true }],
+              ['html', { open: 'never', outputFolder: 'playwright-report' }],
+          ],
 
     // Shared settings for all the projects below
     use: {
