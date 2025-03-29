@@ -45,6 +45,14 @@ jobs:
         run: |
           docker logs oidc-mock-prod
       
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: playwright-report
+          path: packages/frontend/playwright-report/
+          retention-days: 30
+      
       - name: Stop container
         if: always()
         run: |
