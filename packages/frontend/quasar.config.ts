@@ -83,6 +83,11 @@ export default defineConfig((/* ctx */) => {
         devServer: {
             // https: true,
             open: false, // disable browser auto open, since the app should be visited through nginx.
+            host: '0.0.0.0', // Add this to bind to all network interfaces (not just localhost)
+            port: 9000, // Explicitly set the port to match Nginx config
+            hmr: {
+                clientPort: 9000, // Explicitly defining this port seems to improve test stability
+            },
         },
 
         // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#framework

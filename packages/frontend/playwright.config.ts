@@ -1,12 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
-import path from 'path';
 
 export default defineConfig({
     // Look for test files in the "tests" directory, relative to this configuration file
     testDir: './tests',
-
-    // Run tests in files in parallel
-    fullyParallel: true,
 
     // Fail the build on CI if you accidentally left test.only in the source code
     forbidOnly: !!process.env.CI,
@@ -15,12 +11,14 @@ export default defineConfig({
     retries: process.env.CI ? 2 : 0,
 
     // Reporter to use
-    reporter: 'list',
+    reporter: [
+        ['list', { printSteps: true }],
+        ['html', { open: 'never', outputFolder: 'playwright-report' }],
+    ],
 
     // Shared settings for all the projects below
     use: {
         // Base URL to use in actions like `await page.goto('/')`
-        // Updated to use the default port from run_dev.sh
         baseURL: 'http://localhost:8080',
 
         // Collect trace when retrying the failed test
@@ -57,7 +55,5 @@ export default defineConfig({
         reuseExistingServer: !process.env.CI,
         stdout: 'pipe',
         stderr: 'pipe',
-        // Increase timeout as the full stack might take longer to start
-        timeout: 60000,
     },
 });
