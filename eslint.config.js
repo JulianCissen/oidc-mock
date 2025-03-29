@@ -5,10 +5,12 @@ const jsdoc = require('eslint-plugin-jsdoc');
 const globals = require('globals');
 const vue = require('eslint-plugin-vue');
 
-const customJsRules = {
+// Common rule sets that can be reused across configurations
+const commonJsRules = {
     'sort-imports': 'error',
 };
-const customTsRules = {
+
+const commonTsRules = {
     '@typescript-eslint/consistent-type-imports': [
         'error',
         {
@@ -30,19 +32,18 @@ const customTsRules = {
     ],
 };
 
-// Only apply ts configs to TypeScript files.
+// Limit TypeScript configs to TypeScript files only
 const tsConfigs = ts.configs.recommended.map((config) =>
     !config.files ? { ...config, files: ['**/*.ts'] } : config,
 );
 
-/**
- * Exports the ESLint configuration.
- */
 module.exports = [
+    // Files to exclude from linting
     {
         ignores: ['**/dist/**', '**/node_modules/**'],
     },
-    // Globals
+
+    // Common globals for all files
     {
         languageOptions: {
             ecmaVersion: 2021,
@@ -51,8 +52,8 @@ module.exports = [
             },
         },
     },
-    // Add node globals to files not in src folders, these are always ran in Node context.
-    // Mainly needed for processing config files.
+
+    // Add Node.js globals for configuration files
     {
         files: ['**/*', '!**/src/**'],
         languageOptions: {
@@ -61,21 +62,24 @@ module.exports = [
             },
         },
     },
+
+    // Base configurations
     js.configs.recommended,
     ...tsConfigs,
     jsdoc.configs['flat/recommended'],
     jsdoc.configs['flat/recommended-typescript'],
     ...vue.configs['flat/recommended'],
-    // Prettier comes after Vue to ensure it doesn't conflict with Vue's formatting rules.
-    prettier,
-    // Custom JS config.
+    prettier, // Must come after Vue configs to avoid formatting conflicts
+
+    // JavaScript-specific configuration
     {
         files: ['**/*.js'],
         rules: {
-            ...customJsRules,
+            ...commonJsRules,
         },
     },
-    // Custom TS config.
+
+    // TypeScript-specific configuration
     {
         files: ['**/*.ts'],
         plugins: {
@@ -88,18 +92,18 @@ module.exports = [
             },
         },
         rules: {
-            ...customJsRules,
-            ...customTsRules,
+            ...commonJsRules,
+            ...commonTsRules,
         },
     },
-    // frontend specific config.
+
+    // Frontend-specific configuration
     {
         files: ['packages/frontend/**/*.{ts,vue}'],
         plugins: {
             '@typescript-eslint': ts.plugin,
         },
         languageOptions: {
-            //parser: ts.parser,
             parserOptions: {
                 parser: ts.parser,
                 project: true,
@@ -123,57 +127,33 @@ module.exports = [
             },
         },
         rules: {
-            // allow async-await
+            // Vue/Quasar specific rules
             'generator-star-spacing': 'off',
-            // allow paren-less arrow functions
             'arrow-parens': 'off',
             'one-var': 'off',
             'no-void': 'off',
             'multiline-ternary': 'off',
-
-            // Disable import rules since they don't work with flat config.
-            //'import/first': 'off',
-            //'import/namespace': 'error',
-            //'import/default': 'error',
-            //'import/export': 'error',
-            //'import/extensions': 'off',
-            //'import/no-unresolved': 'off',
-            //'import/no-extraneous-dependencies': 'off',
-            // The core 'import/named' rules
-            // does not work with type definitions
-            //'import/named': 'off',
-
             'prefer-promise-reject-errors': 'off',
-
             quotes: ['warn', 'single', { avoidEscape: true }],
-
-            // this rule, if on, would require explicit return type on the `render` function
             '@typescript-eslint/explicit-function-return-type': 'off',
-
-            // in plain CommonJS modules, you can't use `import foo = require('foo')` to pass this rule, so it has to be disabled
-            // Disable rule since these rules don't apply to CJS files.
-            //'@typescript-eslint/no-var-requires': 'off',
-
-            // The core 'no-unused-vars' rules (in the eslint:recommended ruleset)
-            // does not work with type definitions
             'no-unused-vars': 'off',
-
-            // allow debugger during development only
             'no-debugger':
                 process.env.NODE_ENV === 'production' ? 'error' : 'off',
-
             'vue/html-indent': 'off',
 
-            ...customJsRules,
-            ...customTsRules,
+            // Inherit common rules
+            ...commonJsRules,
+            ...commonTsRules,
 
+            // Vue-specific formatting
             'vue/attributes-order': ['error', { alphabetical: true }],
             'vue/component-name-in-template-casing': ['error', 'kebab-case'],
         },
     },
-    // backend specific config.
+
+    // Backend-specific configuration (NestJS)
     {
-        files: ['packages/backend/**/*.{ts}'],
+        files: ['packages/backend/**/*.ts'],
         plugins: {
             '@typescript-eslint': ts.plugin,
         },
@@ -190,7 +170,7 @@ module.exports = [
             },
         },
         rules: {
-            // Default NestJS rules.
+            // NestJS recommended rules
             '@typescript-eslint/interface-name-prefix': 'off',
             '@typescript-eslint/explicit-function-return-type': 'off',
             '@typescript-eslint/explicit-module-boundary-types': 'off',
