@@ -17,13 +17,9 @@ jobs:
         run: |
           docker build --target production -t oidc-mock:test .
       
-      - name: Create Docker network
-        run: |
-          docker network create test-network
-          
       - name: Run production container
         run: |
-          docker run -d --name oidc-mock-prod --network test-network -p 8080:8080 -e PORT=8080 oidc-mock:test
+          docker run -d --name oidc-mock-prod -p 8080:8080 -e PORT=8080 oidc-mock:test
           
           # Verify container is running
           docker ps | grep oidc-mock-prod
@@ -33,8 +29,9 @@ jobs:
       
       - name: Run Playwright tests in container
         run: |
-          # Run playwright in a container connected to same network
-          docker run --rm --network test-network \
+          # Run playwright in a container with host network
+          # This allows the container to access the host's localhost where our app is running
+          docker run --rm --network host \
             -v $(pwd):/work -w /work/packages/frontend \
             -e CI=true \
             mcr.microsoft.com/playwright:v1.51.1-jammy \
@@ -58,4 +55,3 @@ jobs:
         run: |
           docker stop oidc-mock-prod || true
           docker rm oidc-mock-prod || true
-          docker network rm test-network || true

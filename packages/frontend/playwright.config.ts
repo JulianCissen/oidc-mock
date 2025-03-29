@@ -25,9 +25,8 @@ export default defineConfig({
     // Shared settings for all the projects below
     use: {
         // Base URL to use in actions like `await page.goto('/')`
-        baseURL: process.env.CI
-            ? 'http://oidc-mock-prod:8080'
-            : 'http://localhost:8080',
+        // Use localhost for both CI and local development
+        baseURL: 'http://localhost:8080',
 
         // Collect trace when retrying the failed test
         trace: 'retain-on-first-failure',
@@ -60,9 +59,7 @@ export default defineConfig({
             : process.platform === 'win32'
               ? 'bash ../../bin/run_dev.sh 8080'
               : '../../bin/run_dev.sh 8080',
-        url: process.env.CI
-            ? 'http://oidc-mock-prod:8080'
-            : 'http://localhost:8080',
+        url: 'http://localhost:8080',
         reuseExistingServer: true,
         stdout: 'pipe',
         stderr: 'pipe',
