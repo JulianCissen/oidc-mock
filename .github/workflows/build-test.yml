@@ -7,9 +7,9 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
-
+    
     steps:
       - uses: actions/checkout@v4
 
@@ -38,35 +38,38 @@ jobs:
       - name: Build Docker image
         run: |
           docker build --target production -t oidc-mock:test .
-
-  test:
-    runs-on: ubuntu-latest
-    container:
-      image: mcr.microsoft.com/playwright:v1.42.1-jammy
-    
-    needs: build
-    
-    steps:
-      - uses: actions/checkout@v4
       
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: 'npm'
-      
-      - name: Make scripts executable
+      - name: Create Docker network
         run: |
-          chmod +x ./bin/run_dev.sh
-      
-      - name: Install dependencies
-        working-directory: ./packages/frontend
+          docker network create test-network
+          
+      - name: Run production container
         run: |
-          npm ci
+          docker run -d --name oidc-mock-prod --network test-network -p 8080:8080 -e PORT=8080 oidc-mock:test
+          
+          # Verify container is running
+          docker ps | grep oidc-mock-prod
+          
+          # Wait for service to be available
+          timeout 60s bash -c 'until curl -s http://localhost:8080 > /dev/null; do sleep 1; done' || (docker logs oidc-mock-prod && false)
       
-      - name: Run Playwright tests
-        working-directory: ./packages/frontend
+      - name: Run Playwright tests in container
         run: |
-          npm run test
-        env:
-          CI: true
+          # Run playwright in a container connected to same network
+          docker run --rm --network test-network \
+            -v $(pwd):/work -w /work/packages/frontend \
+            -e CI=true \
+            mcr.microsoft.com/playwright:v1.42.1-jammy \
+            /bin/bash -c "npm ci && npx playwright test"
+      
+      - name: Container logs (if tests fail)
+        if: failure()
+        run: |
+          docker logs oidc-mock-prod
+      
+      - name: Stop container
+        if: always()
+        run: |
+          docker stop oidc-mock-prod || true
+          docker rm oidc-mock-prod || true
+          docker network rm test-network || true
