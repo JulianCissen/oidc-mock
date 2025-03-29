@@ -20,6 +20,8 @@ on:
 jobs:
   build:
     uses: ./.github/workflows/build.yml
+    with:
+      tag: 'test'
 
   test:
     needs: build
