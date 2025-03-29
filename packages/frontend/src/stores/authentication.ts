@@ -31,6 +31,17 @@ export const useAuthenticationStore = defineStore('authentication', {
             this.claims = {};
             await userManager.signoutRedirect();
         },
+
+        async clearSession() {
+            // Clear the authentication store state
+            this.claims = {};
+
+            // Remove the user from userManager storage
+            await userManager.removeUser();
+
+            // Return to the home page
+            window.location.href = '/';
+        },
     },
 });
 
