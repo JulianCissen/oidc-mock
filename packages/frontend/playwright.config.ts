@@ -7,8 +7,12 @@ export default defineConfig({
     // Fail the build on CI if you accidentally left test.only in the source code
     forbidOnly: !!process.env.CI,
 
-    // Stop after the first failure in CI
-    maxFailures: process.env.CI ? 1 : 0,
+    // Stop after several failures in CI to balance between early failure detection and detailed reporting
+    maxFailures: process.env.CI ? 5 : 0,
+
+    // Timeouts: Set a reasonable global timeout to prevent long-running tests
+    globalTimeout: process.env.CI ? 5 * 60 * 1000 : 0, // 5 minutes total time limit on CI
+    timeout: process.env.CI ? 15000 : 30000, // 15 seconds per test on CI
 
     // Reporter to use - add GitHub reporter for CI
     reporter: process.env.CI
@@ -33,6 +37,9 @@ export default defineConfig({
 
         // Take screenshots on test failures
         screenshot: 'on-first-failure',
+
+        // Add a reasonable navigation timeout
+        navigationTimeout: 10000, // 10 second navigation timeout
     },
 
     // Configure projects for major browsers
