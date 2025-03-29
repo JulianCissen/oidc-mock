@@ -1,16 +1,11 @@
 <template>
     <span class="timestamp-value">
-        <q-tooltip
-            anchor="top middle"
-            class="text-caption"
-            self="bottom middle"
-        >
-            {{ formattedTime }} </q-tooltip
-        >{{ displayValue }}
+        <generic-tooltip :tooltip-content="formattedTime" />{{ displayValue }}
     </span>
 </template>
 
 <script setup lang="ts">
+import GenericTooltip from './GenericTooltip.vue';
 import { computed } from 'vue';
 
 type Props = {
