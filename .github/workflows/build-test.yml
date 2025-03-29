@@ -35,18 +35,38 @@ jobs:
           npm ci
           npm run build
 
-      - name: Install Playwright Browsers
+      - name: Build Docker image
+        run: |
+          docker build --target production -t oidc-mock:test .
+
+  test:
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.42.1-jammy
+    
+    needs: build
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+      
+      - name: Make scripts executable
+        run: |
+          chmod +x ./bin/run_dev.sh
+      
+      - name: Install dependencies
         working-directory: ./packages/frontend
         run: |
-          npx playwright install --with-deps
-
+          npm ci
+      
       - name: Run Playwright tests
         working-directory: ./packages/frontend
         run: |
           npm run test
         env:
           CI: true
-
-      - name: Build Docker image
-        run: |
-          docker build --target production -t oidc-mock:test .
