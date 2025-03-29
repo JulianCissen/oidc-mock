@@ -60,12 +60,12 @@ jobs:
           VERSION="${{ steps.version.outputs.version }}"
           
           # Tag with version and latest
-          docker tag oidc-mock:publish ghcr.io/JulianCissen/oidc-mock:$VERSION
-          docker tag oidc-mock:publish ghcr.io/JulianCissen/oidc-mock:latest
+          docker tag oidc-mock:publish ghcr.io/juliancissen/oidc-mock:$VERSION
+          docker tag oidc-mock:publish ghcr.io/juliancissen/oidc-mock:latest
           
           # Push to GitHub Container Registry
-          docker push ghcr.io/JulianCissen/oidc-mock:$VERSION
-          docker push ghcr.io/JulianCissen/oidc-mock:latest
+          docker push ghcr.io/juliancissen/oidc-mock:$VERSION
+          docker push ghcr.io/juliancissen/oidc-mock:latest
           
-          echo "Successfully pushed ghcr.io/JulianCissen/oidc-mock:$VERSION"
-          echo "Successfully pushed ghcr.io/JulianCissen/oidc-mock:latest"
+          echo "Successfully pushed ghcr.io/juliancissen/oidc-mock:$VERSION"
+          echo "Successfully pushed ghcr.io/juliancissen/oidc-mock:latest"
