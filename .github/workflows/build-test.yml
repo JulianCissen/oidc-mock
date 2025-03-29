@@ -35,6 +35,18 @@ jobs:
           npm ci
           npm run build
 
+      - name: Install Playwright Browsers
+        working-directory: ./packages/frontend
+        run: |
+          npx playwright install --with-deps
+
+      - name: Run Playwright tests
+        working-directory: ./packages/frontend
+        run: |
+          npm run test
+        env:
+          CI: true
+
       - name: Build Docker image
         run: |
           docker build --target production -t oidc-mock:test .
