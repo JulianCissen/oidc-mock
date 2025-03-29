@@ -63,7 +63,7 @@ export default defineConfig({
         url: process.env.CI
             ? 'http://oidc-mock-prod:8080'
             : 'http://localhost:8080',
-        reuseExistingServer: !process.env.CI,
+        reuseExistingServer: true,
         stdout: 'pipe',
         stderr: 'pipe',
     },
