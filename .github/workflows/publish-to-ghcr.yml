@@ -1,6 +1,8 @@
 name: Publish to GHCR
 
 on:
+  # The release trigger currently does not work, see:
+  # https://stackoverflow.com/a/69063453
   release:
     types: [published]
   workflow_dispatch:
