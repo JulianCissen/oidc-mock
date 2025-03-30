@@ -1,4 +1,3 @@
-import { authController, oidcProvider } from './controllers';
 import express, {
     type NextFunction,
     type Request,
@@ -7,9 +6,12 @@ import express, {
 } from 'express';
 import { httpLogger, logger } from './utils/logger';
 import { URL } from 'url';
+import { authController } from './controllers';
 import { config } from './config';
 import cookieParser from 'cookie-parser';
+import { initializeProvider } from './controllers/oidc';
 
+// Create Express application
 const app = express();
 
 // Configure middleware.
@@ -19,10 +21,6 @@ app.use(httpLogger);
 
 // Trust proxy
 app.set('trust proxy', true);
-
-// Set up routes.
-app.use('/oidc', oidcProvider.callback());
-app.use('/auth', authController.getRoutes());
 
 // Generic error handler.
 const errorHandler = (
@@ -46,8 +44,6 @@ const errorHandler = (
     res.status(500).send('Internal server error');
 };
 
-app.use(errorHandler);
-
 // Display startup information.
 const displayStartupInfo = () => {
     const issUrl = new URL(config.provider.iss);
@@ -57,5 +53,30 @@ const displayStartupInfo = () => {
     );
 };
 
-// Start server.
-app.listen(3000, displayStartupInfo);
+/**
+ * Initialize the server and all required components
+ */
+const initializeServer = async () => {
+    try {
+        // Initialize the OIDC provider
+        logger.info('Initializing OIDC provider...');
+        const oidcProvider = await initializeProvider();
+
+        // Set up routes after provider is initialized
+        app.use('/oidc', oidcProvider.callback());
+        app.use('/auth', authController.getRoutes());
+
+        // Add error handler after routes
+        app.use(errorHandler);
+
+        // Start the server
+        app.listen(3000, displayStartupInfo);
+    } catch (error) {
+        console.log(error);
+        logger.error('Failed to initialize server:', error);
+        process.exit(1);
+    }
+};
+
+// Start the initialization process
+initializeServer();
