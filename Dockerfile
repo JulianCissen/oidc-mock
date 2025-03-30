@@ -3,14 +3,21 @@
 #######################################################
 FROM node:22-alpine AS development
 # Install required packages.
-RUN ["apk", "add", "--no-cache", "nginx", "gettext"]
+RUN ["apk", "add", "--no-cache", "nginx", "gettext", "wget", "nss"]
+# Install mkcert
+RUN ["wget", "-O", "/usr/local/bin/mkcert", "https://github.com/FiloSottile/mkcert/releases/download/v1.4.4/mkcert-v1.4.4-linux-amd64"]
+RUN ["chmod", "+x", "/usr/local/bin/mkcert"]
 # Copy and configure Nginx.
 COPY ./packages/nginx/development.conf /etc/nginx/nginx.conf.template
+# Copy certificate setup script
+COPY ./packages/nginx/setup-certs.sh /app/setup-certs.sh
+RUN ["chmod", "+x", "/app/setup-certs.sh"]
 # Configure networking.
-ENV PORT=8080
+ENV PORT=8443
+ENV DOMAIN=localhost
 EXPOSE ${PORT}
 # Start Nginx with environment variable substitution.
-CMD ["sh", "-c", "envsubst '$$PORT' < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf && nginx -g 'daemon off;'"]
+CMD ["sh", "-c", "/app/setup-certs.sh && envsubst '$$PORT' < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf && nginx -g 'daemon off;'"]
 
 #######################################################
 # Base builder stage - shared dependencies
@@ -54,7 +61,13 @@ RUN ["npm", "run", "build"]
 FROM node:22-alpine AS production
 WORKDIR /app
 # Install runtime dependencies.
-RUN ["apk", "add", "--no-cache", "nginx", "gettext", "dumb-init"]
+RUN ["apk", "add", "--no-cache", "nginx", "gettext", "dumb-init", "wget", "nss"]
+# Install mkcert
+RUN ["wget", "-O", "/usr/local/bin/mkcert", "https://github.com/FiloSottile/mkcert/releases/download/v1.4.4/mkcert-v1.4.4-linux-amd64"]
+RUN ["chmod", "+x", "/usr/local/bin/mkcert"]
+# Copy nginx cert setup script
+COPY ./packages/nginx/setup-certs.sh /app/setup-certs.sh
+RUN ["chmod", "+x", "/app/setup-certs.sh"]
 # Copy Nginx configuration template.
 COPY ./packages/nginx/production.conf /etc/nginx/nginx.conf.template
 # Copy frontend build artifacts.
@@ -73,11 +86,13 @@ WORKDIR /app
 ENV CUSTOM_CLAIMS_PATH=/app/backend/defaults/claims.json
 ENV CUSTOM_SERVER_CONFIG_PATH=/app/backend/defaults/development.json
 ENV NODE_ENV=production
-ENV PORT=8080
+ENV PORT=8443
+ENV DOMAIN=localhost
 # Expose port.
 EXPOSE ${PORT}
 # Create startup script.
 RUN ["sh", "-c", "printf '#!/bin/sh\\n\
+/app/setup-certs.sh\\n\
 sed \"s/\\${PORT}/$PORT/g\" /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf\\n\
 nginx -g \"daemon off;\" &\\n\
 cd /app/backend && node index.js\\n\
