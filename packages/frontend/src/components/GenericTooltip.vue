@@ -1,6 +1,6 @@
 <template>
     <q-tooltip :anchor="anchor" class="text-caption" :self="self">
-        {{ tooltipContent }}
+        <span :class="{ 'no-wrap': noWrap }">{{ tooltipContent }}</span>
     </q-tooltip>
 </template>
 
@@ -24,10 +24,22 @@ type Props = {
      * @default "bottom middle"
      */
     self?: QTooltipProps['self'];
+    /**
+     * Prevent line breaks in the tooltip content
+     * @default true
+     */
+    noWrap?: boolean;
 };
 
 withDefaults(defineProps<Props>(), {
     anchor: 'top middle',
     self: 'bottom middle',
+    noWrap: true,
 });
 </script>
+
+<style scoped>
+.no-wrap {
+    white-space: nowrap;
+}
+</style>
