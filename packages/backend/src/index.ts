@@ -9,7 +9,6 @@ import { httpLogger, logger } from './utils/logger';
 import { URL } from 'url';
 import { config } from './config';
 import cookieParser from 'cookie-parser';
-import { errors } from 'oidc-provider';
 
 const app = express();
 
@@ -35,17 +34,12 @@ const errorHandler = (
         return;
     }
 
-    // Handle oidc-provider errors.
-    if (err instanceof errors.OIDCProviderError) {
-        res.status(err.statusCode).json({
-            error: err.error,
-            error_description: err.error_description,
-        });
-        return;
+    if (err instanceof Error) {
+        res.err = err;
+    } else {
+        res.err = new Error(String(err));
     }
 
-    // Handle generic errors.
-    logger.error(err);
     res.status(500).send('Internal server error');
 };
 
