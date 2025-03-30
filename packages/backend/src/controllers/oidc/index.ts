@@ -76,6 +76,11 @@ const providerConfig: Configuration = {
         required: () => false,
     },
 
+    renderError(ctx, _, error) {
+        ctx.res.err = error;
+        return;
+    },
+
     // Use the comprehensive TTL configuration with all token types
     ttl: ttlConfig,
 };
