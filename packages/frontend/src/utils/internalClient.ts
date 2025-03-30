@@ -7,9 +7,9 @@ export const userManager = new UserManager({
     client_id: 'client',
     client_secret: 'secret',
     client_authentication: 'client_secret_basic',
-    redirect_uri: `http://${host}/callback`,
+    redirect_uri: `https://${host}/callback`,
     response_type: 'code',
     scope: 'openid',
     authority: '/oidc',
-    post_logout_redirect_uri: `http://${host}`,
+    post_logout_redirect_uri: `https://${host}`,
 });
