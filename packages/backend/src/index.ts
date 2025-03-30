@@ -17,6 +17,9 @@ app.use(express.json());
 app.use(cookieParser(config.cookies.keys) as unknown as RequestHandler); // Somehow the typing provided by cookie-parser is incorrect.
 app.use(httpLogger);
 
+// Trust proxy
+app.set('trust proxy', true);
+
 // Set up routes.
 app.use('/oidc', oidcProvider.callback());
 app.use('/auth', authController.getRoutes());

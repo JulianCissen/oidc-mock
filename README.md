@@ -28,7 +28,7 @@ The easiest way to get started is to use the pre-built Docker image from GitHub 
 docker pull ghcr.io/juliancissen/oidc-mock:latest
 
 # Run the container
-docker run -p 8080:8080 -e PORT=8080 ghcr.io/juliancissen/oidc-mock:latest
+docker run -p 8443:8443 -e PORT=8443 ghcr.io/juliancissen/oidc-mock:latest
 ```
 
 You can also use a specific version:
@@ -38,10 +38,10 @@ You can also use a specific version:
 docker pull ghcr.io/juliancissen/oidc-mock:1.0.0
 
 # Run the container with a specific version
-docker run -p 8080:8080 -e PORT=8080 ghcr.io/juliancissen/oidc-mock:1.0.0
+docker run -p 8443:8443 -e PORT=8443 ghcr.io/juliancissen/oidc-mock:1.0.0
 ```
 
-The OIDC Mock Provider will now be available at http://localhost:8080.
+The OIDC Mock Provider will now be available at https://localhost:8443.
 
 ### Running in Development Mode
 
@@ -51,7 +51,7 @@ git clone https://github.com/JulianCissen/oidc-mock.git
 cd oidc-mock
 
 # Start development servers and Docker container
-./bin/run_dev.sh 8080
+./bin/run_dev.sh 8443
 ```
 
 This starts:
@@ -63,7 +63,7 @@ This starts:
 
 ```bash
 # Build and run the production Docker container
-./bin/run_prod.sh 8080
+./bin/run_prod.sh 8443
 ```
 
 ## Configuration
@@ -74,7 +74,7 @@ You can provide a custom claims file during runtime by mounting it to the contai
 
 Example:
 ```bash
-docker run -p 8080:8080 \
+docker run -p 8443:8443 \
     -v /path/to/custom_claims.json:/app/backend/config/custom_claims.json \
     -e CUSTOM_CLAIMS_PATH=/app/backend/config/custom_claims.json \
     oidc-mock:1.0.0
@@ -100,7 +100,7 @@ You can provide a custom server configuration file during runtime by mounting it
 
 Example:
 ```bash
-docker run -p 8080:8080 \
+docker run -p 8443:8443 \
     -v /path/to/custom_server_config.json:/app/backend/config/custom_server_config.json \
     -e CUSTOM_SERVER_CONFIG_PATH=/app/backend/config/custom_server_config.json \
     oidc-mock:1.0.0
@@ -113,7 +113,7 @@ The server configuration file should be a JSON file with the following structure
 ```json
 {
   "provider": {
-    "iss": "http://localhost:8080",
+    "iss": "https://localhost:8443",
     "tokenLifetimes": {
       "accessToken": 3600,
       "authorizationCode": 60,
@@ -188,7 +188,7 @@ You can use environment variables in your configuration file using `${VARIABLE_N
 ```json
 {
   "provider": {
-    "iss": "http://${DOMAIN}:${PORT}"
+    "iss": "https://${DOMAIN}:${PORT}"
   }
 }
 ```
@@ -203,7 +203,35 @@ docker run -p 9000:9000 \
     oidc-mock:1.0.0
 ```
 
-If no port is specified, the default port 8080 will be used.
+If no port is specified, the default port 8443 will be used.
+
+### HTTPS Configuration
+
+The OIDC Mock Provider uses HTTPS by default. You can configure it in the following ways:
+
+#### Using Self-Signed Certificates
+
+By default, the server generates self-signed certificates for `localhost`. You can specify a custom domain:
+
+```bash
+docker run -p 8443:8443 \
+    -e DOMAIN=my-domain.example.com \
+    oidc-mock:1.0.0
+```
+
+#### Using Custom Certificates
+
+You can provide your own certificates by mounting them to the container:
+
+```bash
+docker run -p 8443:8443 \
+    -v /path/to/certificates:/custom-certs \
+    oidc-mock:1.0.0
+```
+
+The certificate files must be named:
+- `cert.pem` - The SSL certificate
+- `key.pem` - The private key
 
 ## Project Structure
 

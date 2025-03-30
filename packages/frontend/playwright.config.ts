@@ -30,7 +30,7 @@ export default defineConfig({
     use: {
         // Base URL to use in actions like `await page.goto('/')`
         // Use localhost for both CI and local development
-        baseURL: 'http://localhost:8080',
+        baseURL: 'https://localhost:8443',
 
         // Collect trace when retrying the failed test
         trace: 'retain-on-first-failure',
@@ -40,6 +40,9 @@ export default defineConfig({
 
         // Add a reasonable navigation timeout
         navigationTimeout: 10000, // 10 second navigation timeout
+
+        // Our test environments use self-signed certificates
+        ignoreHTTPSErrors: true,
     },
 
     // Configure projects for major browsers
@@ -64,9 +67,10 @@ export default defineConfig({
         command: process.env.CI
             ? 'echo "Using external container for tests"'
             : process.platform === 'win32'
-              ? 'bash ../../bin/run_dev.sh 8080'
-              : '../../bin/run_dev.sh 8080',
-        url: 'http://localhost:8080',
+              ? 'bash ../../bin/run_dev.sh 8443'
+              : '../../bin/run_dev.sh 8443',
+        url: 'https://localhost:8443',
+        ignoreHTTPSErrors: true,
         reuseExistingServer: true,
         stdout: 'pipe',
         stderr: 'pipe',

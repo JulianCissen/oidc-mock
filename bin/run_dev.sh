@@ -6,8 +6,9 @@ cd "$(dirname "$0")/.."
 # Remove any existing container with the same name
 docker rm -f oidc-mock-dev 2>/dev/null || true
 
-# Default port is 8080 if not provided
-PORT=${1:-8080}
+# Default port is 8443 if not provided
+PORT=${1:-8443}
+DOMAIN=${2:-localhost}
 
 # Build the Docker image to incorporate any changes (explicit rebuild)
 echo "Building Docker development image..."
@@ -27,6 +28,7 @@ echo "Starting development container on port $PORT..."
 docker run --name oidc-mock-dev \
   -p $PORT:$PORT \
   -e PORT=$PORT \
+  -e DOMAIN=$DOMAIN \
   --add-host=host.docker.internal:host-gateway \
   oidc-mock:development &
 DOCKER_PID=$!
