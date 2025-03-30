@@ -3,12 +3,13 @@
 # Change to the parent directory of where the script is located
 cd "$(dirname "$0")/.."
 
-# Remove any existing container with the same name
-docker rm -f oidc-mock 2>/dev/null || true
-
-# Check if a port is provided as an argument
+# Get arguments with defaults
 PORT=${1:-8443}
 DOMAIN=${2:-localhost}
+CONTAINER_NAME=${3:-oidc-mock}
+
+# Remove any existing container with the same name
+docker rm -f $CONTAINER_NAME 2>/dev/null || true
 
 # Get version from package.json - use grep and sed to avoid tty issues
 VERSION=$(grep -m1 '"version"' package.json | sed -E 's/.*"version": "([^"]+)".*/\1/')
@@ -17,7 +18,7 @@ VERSION=$(grep -m1 '"version"' package.json | sed -E 's/.*"version": "([^"]+)".*
 source ./bin/build.sh
 
 # Run the container with the newly built image
-docker run -p $PORT:$PORT \
+docker run --name $CONTAINER_NAME -p $PORT:$PORT \
   -e PORT=$PORT \
   -e DOMAIN=$DOMAIN \
   oidc-mock:$VERSION

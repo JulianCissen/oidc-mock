@@ -86,7 +86,8 @@ export default defineConfig((/* ctx */) => {
             host: '0.0.0.0', // Add this to bind to all network interfaces (not just localhost)
             port: 9000, // Explicitly set the port to match Nginx config
             hmr: {
-                clientPort: 9000, // Explicitly defining this port seems to improve test stability
+                clientPort: 9000, // Set to bypass the Nginx proxy
+                protocol: 'ws', // Use non-secure WebSocket protocol, client will think it's secure due to https protocol.
             },
         },
 

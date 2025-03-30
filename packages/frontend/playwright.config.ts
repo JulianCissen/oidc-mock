@@ -30,7 +30,7 @@ export default defineConfig({
     use: {
         // Base URL to use in actions like `await page.goto('/')`
         // Use localhost for both CI and local development
-        baseURL: 'https://localhost:8443',
+        baseURL: 'https://localhost:8444', // Changed to use the test environment port
 
         // Collect trace when retrying the failed test
         trace: 'retain-on-first-failure',
@@ -61,15 +61,15 @@ export default defineConfig({
         },
     ],
 
-    // Run your local dev server before starting the tests
+    // Run your local test server before starting the tests
     // In CI, we use a dummy command that returns immediately
     webServer: {
         command: process.env.CI
             ? 'echo "Using external container for tests"'
             : process.platform === 'win32'
-              ? 'bash ../../bin/run_dev.sh 8443'
-              : '../../bin/run_dev.sh 8443',
-        url: 'https://localhost:8443',
+              ? 'bash ../../bin/run_prod.sh 8444 localhost oidc-mock-test'
+              : '../../bin/run_prod.sh 8444 localhost oidc-mock-test',
+        url: 'https://localhost:8444',
         ignoreHTTPSErrors: true,
         reuseExistingServer: true,
         stdout: 'pipe',
