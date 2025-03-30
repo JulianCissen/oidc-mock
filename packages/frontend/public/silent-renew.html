@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Silent Renewal</title>
+</head>
+
+<body>
+    <script>
+        window.parent.postMessage({ source: 'oidc-client', url: window.location.href }, window.location.origin);
+    </script>
+</body>
+
+</html>

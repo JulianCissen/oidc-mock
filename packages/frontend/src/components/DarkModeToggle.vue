@@ -8,16 +8,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
-import { useQuasar } from 'quasar';
+import { useDarkMode } from 'src/composables/useDarkMode';
 
-const quasar = useQuasar();
-
-// Initialize darkMode with the value from localStorage.
-const darkMode = ref(quasar.dark.isActive);
-// Update dark mode setting based on the value of darkMode.
-watch(darkMode, (value) => {
-    quasar.dark.set(value);
-    window.localStorage.setItem('darkMode', value.toString());
-});
+// Get the dark mode state from the composable
+const { darkMode } = useDarkMode();
 </script>

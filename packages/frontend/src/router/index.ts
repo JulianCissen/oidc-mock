@@ -7,7 +7,6 @@ import {
 import { defineRouter } from '#q-app/wrappers';
 import routes from './routes';
 import { useAuthenticationStore } from 'src/stores/authentication';
-import { userManager } from 'src/utils/internalClient';
 
 /*
  * If not building with SSR mode, you can
@@ -41,35 +40,20 @@ export default defineRouter(function (/* { store, ssrContext } */) {
     Router.beforeEach(async (to, _, next) => {
         if (to.query['code']) {
             try {
-                const res = await userManager.signinCallback(
+                const success = await authenticationStore.signInCallback(
                     window.location.href,
                 );
-                if (!res) throw new Error('No response from signinCallback');
-                authenticationStore.setUserClaims(res.profile);
-                // Clear query params.
-                to.query = {};
-                next(to);
+                if (success) {
+                    // Clear query params.
+                    to.query = {};
+                    next(to);
+                } else {
+                    next('/');
+                }
                 return;
             } catch (err) {
                 next('/');
                 return;
-            }
-        }
-        next();
-    });
-
-    // Check if the user is already logged in with the OIDC provider.
-    Router.beforeEach(async (to, _, next) => {
-        if (!authenticationStore.isAuthenticated) {
-            try {
-                const user = await userManager.getUser();
-                if (user && !user.expired) {
-                    authenticationStore.setUserClaims(user.profile);
-                    next('/callback'); // Redirect to callback route
-                    return;
-                }
-            } catch (err) {
-                console.error('Error checking user session:', err);
             }
         }
         next();
