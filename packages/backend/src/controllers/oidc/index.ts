@@ -6,6 +6,7 @@ import Provider, {
 } from 'oidc-provider';
 import { claimSets } from '../../config/claims';
 import { config } from '../../config';
+import { generateJWKS } from '../../utils/generateJWKS';
 import { ttlConfig } from '../../utils/ttlConfig';
 
 // Account finder function.
@@ -44,57 +45,84 @@ const interactionRoutes = (_: KoaContextWithOIDC, interaction: Interaction) => {
     return '/';
 };
 
-// Provider configuration.
-const providerConfig: Configuration = {
-    clients: config.clients,
-    findAccount,
+// Create a variable for the provider that will be initialized asynchronously
+let oidcProvider: Provider;
 
-    features: {
-        devInteractions: { enabled: false },
-        introspection: { enabled: true },
-        jwtIntrospection: { enabled: true },
-        rpInitiatedLogout: {
-            enabled: true,
-            logoutSource,
+// Initialize the provider asynchronously
+export const initializeProvider = async (): Promise<Provider> => {
+    // Generate the JWKS
+    const privateKeys = await generateJWKS();
+
+    // Provider configuration.
+    const providerConfig: Configuration = {
+        clientBasedCORS: () => true,
+
+        clients: config.clients,
+
+        findAccount,
+
+        features: {
+            devInteractions: { enabled: false },
+            introspection: { enabled: true },
+            jwtIntrospection: { enabled: true },
+            rpInitiatedLogout: {
+                enabled: true,
+                logoutSource,
+            },
         },
-    },
 
-    clientBasedCORS: () => true,
+        cookies: {
+            keys: config.cookies.keys,
+            long: { signed: true, path: '/', secure: true },
+            short: { signed: true, path: '/', secure: true },
+        },
 
-    cookies: {
-        keys: config.cookies.keys,
-        long: { signed: true, path: '/', secure: true },
-        short: { signed: true, path: '/', secure: true },
-    },
+        interactions: {
+            url: interactionRoutes,
+        },
 
-    interactions: {
-        url: interactionRoutes,
-    },
+        jwks: privateKeys,
 
-    pkce: {
-        // Don't require PKCE since it's a mock server that doesn't serve secure content.
-        required: () => false,
-    },
+        pkce: {
+            // Don't require PKCE since it's a mock server that doesn't serve secure content.
+            required: () => false,
+        },
 
-    renderError(ctx, _, error) {
-        ctx.res.err = error;
-        return;
-    },
+        renderError(ctx, _, error) {
+            ctx.res.err = error;
+            return;
+        },
 
-    // Use the comprehensive TTL configuration with all token types
-    ttl: ttlConfig,
+        // Use the comprehensive TTL configuration with all token types
+        ttl: ttlConfig,
+    };
+
+    // Initialize provider.
+    const provider = new Provider(config.provider.iss, providerConfig);
+    provider.proxy = true;
+
+    // Set custom behavior to destroy session on rp-initiated logout.
+    provider.use(async (ctx, next) => {
+        await next();
+        if (ctx['oidc']['route'] === 'end_session_confirm') {
+            ctx['oidc']['session'].destroy();
+        }
+    });
+
+    // Store the initialized provider
+    oidcProvider = provider;
+    return provider;
 };
 
-// Initialize provider.
-const oidcProvider = new Provider(config.provider.iss, providerConfig);
-oidcProvider.proxy = true;
-
-// Set custom behavior to destroy session on rp-initiated logout.
-oidcProvider.use(async (ctx, next) => {
-    await next();
-    if (ctx['oidc']['route'] === 'end_session_confirm') {
-        ctx['oidc']['session'].destroy();
+// Export a getter function that ensures the provider is initialized
+export const getProvider = (): Provider => {
+    if (!oidcProvider) {
+        throw new Error(
+            'OIDC Provider has not been initialized. Call initializeProvider() first.',
+        );
     }
-});
+    return oidcProvider;
+};
 
+// For backward compatibility
 export { oidcProvider };

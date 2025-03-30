@@ -1,24 +1,16 @@
 import { exportJWK, generateKeyPair } from 'jose';
-import crypto from 'crypto';
 
 /**
  * Generate a JSON Web Key Set (JWKS) and a private key.
  * @returns JWKS and private key.
  */
 export const generateJWKS = async () => {
-    const keyPair = await generateKeyPair('RS256');
-    const privateKey = await exportJWK(keyPair.privateKey);
-    const publicKey = await exportJWK(keyPair.publicKey);
-
-    // Generate a key id.
-    const kid = crypto.randomBytes(16).toString('hex');
-    publicKey.kid = kid;
-    publicKey.alg = 'RS256';
-    publicKey.use = 'sig';
+    const keyPair = await generateKeyPair('RS256', { extractable: true });
+    const cryptoKey = await exportJWK(keyPair.privateKey);
 
     const jwks = {
-        keys: [publicKey],
+        keys: [cryptoKey],
     };
 
-    return { jwks, privateKey };
+    return jwks;
 };
