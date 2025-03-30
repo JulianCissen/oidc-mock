@@ -48,7 +48,7 @@ jobs:
           docker ps | grep oidc-mock-prod
           
           # Wait for service to be available
-          timeout 60s bash -c 'until curl -s https://localhost:8443 > /dev/null; do sleep 1; done' || (docker logs oidc-mock-prod && false)
+          timeout 60s bash -c 'until curl -ks https://localhost:8443 > /dev/null; do sleep 1; done' || (docker logs oidc-mock-prod && false)
       
       - name: Run Playwright tests in container
         run: |
