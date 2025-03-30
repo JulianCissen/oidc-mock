@@ -42,13 +42,13 @@ jobs:
 
       - name: Run production container
         run: |
-          docker run -d --name oidc-mock-prod -p 8443:8443 -e PORT=8443 oidc-mock:test
+          docker run -d --name oidc-mock-prod -p 8444:8444 -e PORT=8444 oidc-mock:test
           
           # Verify container is running
           docker ps | grep oidc-mock-prod
           
           # Wait for service to be available
-          timeout 60s bash -c 'until curl -ks https://localhost:8443 > /dev/null; do sleep 1; done' || (docker logs oidc-mock-prod && false)
+          timeout 60s bash -c 'until curl -ks https://localhost:8444 > /dev/null; do sleep 1; done' || (docker logs oidc-mock-prod && false)
       
       - name: Run Playwright tests in container
         run: |
