@@ -3,8 +3,13 @@
 </template>
 
 <script setup lang="ts">
-import { useQuasar } from 'quasar';
+import { initializeAuthentication } from 'src/utils/authInitializer';
+import { useDarkMode } from 'src/composables/useDarkMode';
 
-const quasar = useQuasar();
-quasar.dark.set(window.localStorage.getItem('darkMode') === 'true');
+// Initialize dark mode settings
+const { initDarkMode } = useDarkMode();
+initDarkMode();
+
+// Initialize authentication
+initializeAuthentication();
 </script>

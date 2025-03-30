@@ -12,4 +12,8 @@ export const userManager = new UserManager({
     scope: 'openid',
     authority: '/oidc',
     post_logout_redirect_uri: `https://${host}`,
+    // Use the minimal HTML page in the public directory
+    silent_redirect_uri: `https://${host}/silent-renew.html`,
+    automaticSilentRenew: true,
+    includeIdTokenInSilentRenew: true,
 });

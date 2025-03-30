@@ -4,6 +4,7 @@
             <q-toolbar>
                 <q-toolbar-title> OIDC Mock Provider </q-toolbar-title>
                 <dark-mode-toggle />
+                <clear-session-button />
                 <logout-button />
             </q-toolbar>
         </q-header>
@@ -25,6 +26,7 @@
 </template>
 
 <script setup lang="ts">
+import ClearSessionButton from 'src/components/ClearSessionButton.vue';
 import DarkModeToggle from 'src/components/DarkModeToggle.vue';
 import GenericError from 'src/pages/GenericError.vue';
 import IndeterminateCircularProgressIndicator from 'src/components/IndeterminateCircularProgressIndicator.vue';

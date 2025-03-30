@@ -63,8 +63,8 @@ const providerConfig: Configuration = {
 
     cookies: {
         keys: config.cookies.keys,
-        long: { signed: true, path: '/' },
-        short: { signed: true, path: '/' },
+        long: { signed: true, path: '/', secure: true },
+        short: { signed: true, path: '/', secure: true },
     },
 
     interactions: {
