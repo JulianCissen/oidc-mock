@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.0 (2025-03-31)
+
+
+### Features
+
+* added most basic CSP header, adjusted silent renew iframe to be compatible ([d54cca8](https://github.com/JulianCissen/oidc-mock/commit/d54cca8cc46a5619e7edf03c717d7a38c946f960))
+
 ## [1.1.0](https://github.com/JulianCissen/oidc-mock/compare/v1.0.0...v1.1.0) (2025-03-30)
 
 
