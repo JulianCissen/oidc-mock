@@ -10,6 +10,7 @@
             "redirect_uris": ["https://localhost:${PORT}/callback", "https://localhost:${PORT}/silent-renew.html"],
             "post_logout_redirect_uris": ["https://localhost:${PORT}"],
             "grant_types": ["authorization_code", "refresh_token"],
+            "token_endpoint_auth_method": "client_secret_basic",
             "tokenLifetimes": {
                 "accessToken": 7200,
                 "authorizationCode": 600,
