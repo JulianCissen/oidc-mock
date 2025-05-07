@@ -3,9 +3,11 @@ import { readFileSync } from 'fs';
 import { z } from 'zod';
 
 const claimsSchema = z.array(
-    z.object({
-        sub: z.string(),
-    }),
+    z
+        .object({
+            sub: z.string(),
+        })
+        .passthrough(),
 );
 
 const claimsFilePath = getFileRefFromEnv(
