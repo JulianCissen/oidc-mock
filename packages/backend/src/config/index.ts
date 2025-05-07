@@ -25,8 +25,16 @@ const schema = z.object({
                 .default(['authorization_code', 'refresh_token']),
             response_types: z.array(z.enum(['code'])).default(['code']),
             token_endpoint_auth_method: z
-                .enum(['client_secret_basic'])
-                .default('client_secret_basic'),
+                .enum([
+                    'none',
+                    'client_secret_post',
+                    'client_secret_basic',
+                    'client_secret_jwt',
+                    'private_key_jwt',
+                    'tls_client_auth',
+                    'self_signed_tls_client_auth',
+                ])
+                .default('none'),
             tokenLifetimes: tokenLifetimesSchema.partial().default({}),
         }),
     ),
