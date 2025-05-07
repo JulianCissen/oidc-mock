@@ -3,6 +3,7 @@ import Provider, {
     type FindAccount,
     type Interaction,
     type KoaContextWithOIDC,
+    errors,
 } from 'oidc-provider';
 import { claimSets } from '../../config/claims';
 import { config } from '../../config';
@@ -48,6 +49,11 @@ const interactionRoutes = (_: KoaContextWithOIDC, interaction: Interaction) => {
 // Create a variable for the provider that will be initialized asynchronously
 let oidcProvider: Provider;
 
+const corsProp = 'urn:custom:client:allowed-cors-origins';
+const isOrigin = (value: unknown) => {
+    return typeof value === 'string' && URL.parse(value)?.origin === value;
+};
+
 // Initialize the provider asynchronously
 export const initializeProvider = async (): Promise<Provider> => {
     // Generate the JWKS
@@ -55,9 +61,33 @@ export const initializeProvider = async (): Promise<Provider> => {
 
     // Provider configuration.
     const providerConfig: Configuration = {
-        clientBasedCORS: () => true,
+        clientBasedCORS(_, origin, client) {
+            // ctx.oidc.route can be used to exclude endpoints from this behaviour, in that case just return
+            // true to always allow CORS on them, false to deny
+            // you may also allow some known internal origins if you want to
+            return (client[corsProp] as string[]).includes(origin);
+        },
 
         clients: config.clients,
+
+        extraClientMetadata: {
+            properties: [corsProp],
+            validator(_, key, value, metadata) {
+                if (key === corsProp) {
+                    // set default (no CORS)
+                    if (value === undefined) {
+                        metadata[corsProp] = [];
+                        return;
+                    }
+                    // validate an array of Origin strings
+                    if (!Array.isArray(value) || !value.every(isOrigin)) {
+                        throw new errors.InvalidClientMetadata(
+                            `${corsProp} must be an array of origins`,
+                        );
+                    }
+                }
+            },
+        },
 
         findAccount,
 
