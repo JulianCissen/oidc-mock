@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.2.0 (2025-05-07)
+
+
+### Features
+
+* added most basic CSP header, adjusted silent renew iframe to be compatible ([d54cca8](https://github.com/JulianCissen/oidc-mock/commit/d54cca8cc46a5619e7edf03c717d7a38c946f960))
+* implement CORS support in provider configuration and validate client metadata ([159bb4c](https://github.com/JulianCissen/oidc-mock/commit/159bb4c214d71653607dbaf6b9272a05c39e1082))
+
+
+### Continuous Integration
+
+* reset versioning for release please ([dbe3c5e](https://github.com/JulianCissen/oidc-mock/commit/dbe3c5e3aa08f439f98b7f48f49594d10d0e6175))
+
 ## [1.1.0](https://github.com/JulianCissen/oidc-mock/compare/v1.0.0...v1.1.0) (2025-03-30)
 
 
