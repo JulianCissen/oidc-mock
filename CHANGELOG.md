@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.3.0](https://github.com/JulianCissen/oidc-mock/compare/v1.2.0...v1.3.0) (2025-05-07)
+
+
+### Features
+
+* added support for more claims than just sub ([a5dec4e](https://github.com/JulianCissen/oidc-mock/commit/a5dec4e3fa69a0d14dce3d86ee71f23cce2e4f3c))
+* expand token_endpoint_auth_method options in schema ([b639e44](https://github.com/JulianCissen/oidc-mock/commit/b639e44841bbc2dfc987532969eeffa5b9270486))
+
+
+### Reverts
+
+* CORS changes ([10ecb28](https://github.com/JulianCissen/oidc-mock/commit/10ecb28d8ef87079a967a3a8ad5a39ad49aea138))
+* removed CSP change, it broke the tests. ([d1bc306](https://github.com/JulianCissen/oidc-mock/commit/d1bc306078778482ee4d645abb8278e483703c2c))
+
 ## 1.2.0 (2025-05-07)
 
 
