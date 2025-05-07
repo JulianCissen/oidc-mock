@@ -55,6 +55,8 @@ export const initializeProvider = async (): Promise<Provider> => {
 
     // Provider configuration.
     const providerConfig: Configuration = {
+        claims: config.claims,
+
         clientBasedCORS: () => true,
 
         clients: config.clients,

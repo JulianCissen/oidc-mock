@@ -13,6 +13,13 @@ const schema = z.object({
         iss: z.string(),
         tokenLifetimes: tokenLifetimesSchema.default(DEFAULT_TOKEN_LIFETIMES),
     }),
+    claims: z.record(z.union([z.null(), z.array(z.string())])).default({
+        acr: null,
+        auth_time: null,
+        iss: null,
+        openid: ['sub'],
+        sid: null,
+    }),
     clients: z.array(
         z.object({
             client_id: z.string(),
