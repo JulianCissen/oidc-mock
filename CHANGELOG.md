@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.1](https://github.com/JulianCissen/oidc-mock/compare/v1.4.0...v1.4.1) (2025-05-08)
+
+
+### Bug Fixes
+
+* fixed an issue where not all claims were returned with idtoken by support conformIdTokenClaims setting. ([71de6b4](https://github.com/JulianCissen/oidc-mock/commit/71de6b4207d72f22f0615832201c218ab868ecfe))
+
 ## [1.4.0](https://github.com/JulianCissen/oidc-mock/compare/v1.3.0...v1.4.0) (2025-05-07)
 
 
