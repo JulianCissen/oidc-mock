@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/JulianCissen/oidc-mock/compare/v1.3.0...v1.4.0) (2025-05-07)
+
+
+### Features
+
+* add claims configuration to provider setup ([a6f1479](https://github.com/JulianCissen/oidc-mock/commit/a6f14790cde8410c24773f1c6e49e229f849936f))
+
 ## [1.3.0](https://github.com/JulianCissen/oidc-mock/compare/v1.2.0...v1.3.0) (2025-05-07)
 
 
