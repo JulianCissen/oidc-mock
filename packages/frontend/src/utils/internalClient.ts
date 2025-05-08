@@ -9,7 +9,7 @@ export const userManager = new UserManager({
     client_authentication: 'client_secret_basic',
     redirect_uri: `https://${host}/callback`,
     response_type: 'code',
-    scope: 'openid',
+    scope: 'openid profile',
     authority: '/oidc',
     post_logout_redirect_uri: `https://${host}`,
     // Use the minimal HTML page in the public directory

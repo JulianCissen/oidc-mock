@@ -6,5 +6,10 @@
     {
         "sub": "foo",
         "roles": ["user"]
+    },
+    {
+        "sub": "openid-user",
+        "given_name": "OpenID",
+        "family_name": "User"
     }
 ]

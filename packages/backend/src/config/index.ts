@@ -45,6 +45,7 @@ const schema = z.object({
             tokenLifetimes: tokenLifetimesSchema.partial().default({}),
         }),
     ),
+    conformIdTokenClaims: z.boolean().default(true),
     cookies: z
         .object({
             keys: z

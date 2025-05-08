@@ -61,6 +61,8 @@ export const initializeProvider = async (): Promise<Provider> => {
 
         clients: config.clients,
 
+        conformIdTokenClaims: config.conformIdTokenClaims,
+
         findAccount,
 
         features: {
