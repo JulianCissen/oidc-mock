@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.2](https://github.com/JulianCissen/oidc-mock/compare/v1.4.1...v1.4.2) (2025-06-01)
+
+
+### Bug Fixes
+
+* fixed a bug causing an id token subject mismatch on logout with id token hint ([367a2a3](https://github.com/JulianCissen/oidc-mock/commit/367a2a352cb44f4405b4ab235272bf6321dad063))
+
 ## [1.4.1](https://github.com/JulianCissen/oidc-mock/compare/v1.4.0...v1.4.1) (2025-05-08)
 
 
