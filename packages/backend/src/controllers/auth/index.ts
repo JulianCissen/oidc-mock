@@ -45,10 +45,16 @@ class AuthController extends Controller {
                     return;
                 }
 
+                const claims = claimSets[req.query.claims_index];
+                if (!claims) {
+                    res.status(400).send('Invalid claims index');
+                    return;
+                }
+
                 // Finish interaction.
                 return await oidcProvider.interactionFinished(req, res, {
                     login: {
-                        accountId: String(req.query.claims_index),
+                        accountId: claims.sub,
                     },
                 });
             },

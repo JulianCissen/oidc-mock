@@ -11,8 +11,7 @@ import { ttlConfig } from '../../utils/ttlConfig';
 
 // Account finder function.
 const findAccount: FindAccount = (_, id) => {
-    const idNumber = parseInt(id, 10);
-    const claims = claimSets[idNumber];
+    const claims = claimSets.find((claimSet) => claimSet.sub === id);
     if (!claims) throw new Error('Claims not found');
     return {
         accountId: id,
