@@ -14,11 +14,11 @@
         "test:debug": "playwright test --debug"
     },
     "dependencies": {
-        "@quasar/extras": "1.16.17",
+        "@quasar/extras": "1.17.0",
         "axios": "1.8.4",
         "oidc-client-ts": "3.2.0",
         "pinia": "3.0.1",
-        "quasar": "2.18.1",
+        "quasar": "2.18.2",
         "vue": "3.5.13",
         "vue-router": "4.5.0"
     },
