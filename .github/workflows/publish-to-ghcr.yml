@@ -28,7 +28,7 @@ jobs:
     
     steps:
       - name: Download Docker image artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: oidc-mock-image
           path: /tmp
