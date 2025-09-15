@@ -15,7 +15,7 @@
     },
     "dependencies": {
         "@quasar/extras": "1.16.17",
-        "axios": "1.8.4",
+        "axios": "1.12.2",
         "oidc-client-ts": "3.2.0",
         "pinia": "3.0.1",
         "quasar": "2.18.1",
